@@ -1,0 +1,65 @@
+name: frrk8s
+prefix: ""
+
+topology:
+  nodes:
+    ### fabric ###
+    frrspine:
+      kind: linux
+      image: frrouting/frr:latest
+      binds:
+        - configs/frrspine.conf:/etc/frr/frr.conf
+        - configs/frrdaemons:/etc/frr/daemons
+        - configs/vtysh.conf:/etc/frr/vtysh.conf
+      exec:
+        - sysctl -w net.ipv4.ip_forward=1
+
+    frrleaf1:
+      kind: linux
+      image: frrouting/frr:latest
+      binds:
+        - configs/frrleaf1.conf:/etc/frr/frr.conf
+        - configs/frrdaemons:/etc/frr/daemons
+        - configs/vtysh.conf:/etc/frr/vtysh.conf
+      exec:
+        - sysctl -w net.ipv4.ip_forward=1
+
+    frrleaf2:
+      kind: linux
+      image: frrouting/frr:latest
+      binds:
+        - configs/frrleaf2.conf:/etc/frr/frr.conf
+        - configs/frrdaemons:/etc/frr/daemons
+        - configs/vtysh.conf:/etc/frr/vtysh.conf
+      exec:
+        - sysctl -w net.ipv4.ip_forward=1
+        ### - ip route add 192.168.49.0/24 dev eth2
+
+    $MK_BRIDGE:
+      kind: bridge
+
+    ### minikube cluster ###
+    mkcluster:
+      kind: ext-container
+      exec:
+        - ip route add 192.168.100.0/24 via 192.168.49.101 dev eth0
+
+    mkcluster-m02:
+      kind: ext-container
+      exec:
+        - ip route add 192.168.100.0/24 via 192.168.49.101 dev eth0
+
+    ### client ###
+    client:
+      kind: linux
+      image: ghcr.io/hellt/network-multitool
+      exec:
+        - ip route delete default via 172.20.20.1
+        - ip addr add 192.168.100.11/24 dev eth1
+        - ip route add default via 192.168.100.1
+
+  links:
+    - endpoints: ["frrspine:eth1", "frrleaf1:eth1"]
+    - endpoints: ["frrspine:eth2", "frrleaf2:eth1"]
+    - endpoints: ["frrleaf2:eth2", "$MK_BRIDGE:br"]
+    - endpoints: ["client:eth1", "frrleaf1:eth2"]
