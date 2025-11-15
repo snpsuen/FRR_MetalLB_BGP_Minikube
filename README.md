@@ -11,8 +11,8 @@ The upstream FFR leaf switches behave as Internet service providers for the clie
 <table>
 	<thead>
 		<tr>
-			<th scope="col">Node</th>
-			<th scope="col">IP/Network Prefix</th>
+			<th scope="col" aligh="left">Node</th>
+			<th scope="col">IP or Network Prefix</th>
 			<th scope="col">Creation mode</th>
 		</tr>
 	</thead>
