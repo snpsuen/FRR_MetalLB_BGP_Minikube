@@ -68,7 +68,7 @@ The upstream FFR leaf switches behave as Internet service providers for the clie
 
 ### 1. Install Minikube and ContainterLab
 
-In this example, we choose a Killercoda Ubuntu playground to run the lab with minimal system requirements.
+In this example, we opt to run the lab in a Killercoda Ubuntu playground with minimal system requirements.
 ```
 curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64
 sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
