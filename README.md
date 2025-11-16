@@ -6,7 +6,7 @@ Central to the lab is a FRR fabric that connects a client network to a minikube 
 
 The upstream FFR leaf switches behave as Internet service providers for the client and Kubernetes while the FRR spine switch assumes the role of an Internet backbone. Altogether they cooperate to establish BGP connectivity end to end, similar to what is being achieved on the Internet at large.
 
-### Summary of our container inventory in ContainerLab
+### Summary of the container inventory in ContainerLab
 <table>
 	<thead>
 		<tr>
@@ -65,3 +65,15 @@ The upstream FFR leaf switches behave as Internet service providers for the clie
 		</tr>
 	</tbody>
 </table>
+
+### 1. Install Minikube and ContainterLab
+
+In this example, we choose a Killercoda Ubuntu playground to run the lab with minimal system requirements.
+```
+curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
+systemctl stop docker
+rm -rf /var/lib/docker
+rm /etc/containerd/config.toml
+curl -sL https://containerlab.dev/setup | sudo -E bash -s "all"
+```
