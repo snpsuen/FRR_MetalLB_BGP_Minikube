@@ -11,22 +11,24 @@ The upstream FFR leaf switches behave as Internet service providers for the clie
 <table>
 	<thead>
 		<tr>
-			<th scope="col" aligh="left">Node</th>
-			<th scope="col">IP or Network Prefix</th>
-			<th scope="col">Creation mode</th>
+			<th scope="col">Node</th>
+			<th scope="col">Network Settings/th>
+			<th scope="col">Creation</th>
 		</tr>
 	</thead>
 	<tbody>
 		<tr>
-			<td>Client workstation</td>
-			<td aligh="left">192.168.100.11/24</td>
+			<td aligh="left">Client workstation</td>
+			<td aligh="left">Host IP: 192.168.100.11/24</td>
 			<td aligh="left">Created by ContainerLab</td>
-			</td>
 		</tr>
 		<tr>
-			<td>ganache</td>
-			<td aligh="left">Ganache blockchain</td>
-			<td aligh="left"><pre>ganache -h 0.0.0.0</pre></td>
+			<td aligh="left">FRR Leaf 1</td>
+			<td aligh="left">Network Prefix: 192.168.100.0/24 <br>
+				Network Prefix:10.0.1.0/24 <br>
+				BGP ASN: 65001
+			</td>
+			<td aligh="left">Created by ContainerLab</td>
 		</tr>
 	</tbody>
 </table>
