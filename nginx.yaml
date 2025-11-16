@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: nginxhello
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: nginxhello
