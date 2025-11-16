@@ -12,8 +12,8 @@ The upstream FFR leaf switches behave as Internet service providers for the clie
 	<thead>
 		<tr>
 			<th scope="col">Node</th>
-			<th scope="col">Network Settings/th>
-			<th scope="col">Creation</th>
+			<th scope="col">Network Configuration</th>
+			<th scope="col">Creation Mode</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -25,8 +25,16 @@ The upstream FFR leaf switches behave as Internet service providers for the clie
 		<tr>
 			<td aligh="left">FRR Leaf 1</td>
 			<td aligh="left">Network Prefix: 192.168.100.0/24 <br>
-				Network Prefix:10.0.1.0/24 <br>
+				Network Prefix: 10.0.1.0/24 <br>
 				BGP ASN: 65001
+			</td>
+			<td aligh="left">Created by ContainerLab</td>
+		</tr>
+		<tr>
+			<td aligh="left">FRR Spine</td>
+			<td aligh="left">Network Prefix: 10.0.1.0/24 <br>
+				Network Prefix: 10.0.2.0/24 <br>
+				BGP ASN: 64999
 			</td>
 			<td aligh="left">Created by ContainerLab</td>
 		</tr>
