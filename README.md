@@ -72,6 +72,10 @@ In this example, we opt to run the lab in a Killercoda Ubuntu playground with mi
 ```
 curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64
 sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-amd64
+```
+
+If your platform is already running docker, like a Ubuntu playground on Killercoda, it is necessary to clean up certain existing docker data before installing ContainerLab, which also includes the docker engine.
+```
 systemctl stop docker
 rm -rf /var/lib/docker
 rm /etc/containerd/config.toml
