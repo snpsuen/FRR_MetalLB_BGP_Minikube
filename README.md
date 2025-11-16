@@ -81,3 +81,17 @@ rm -rf /var/lib/docker
 rm /etc/containerd/config.toml
 curl -sL https://containerlab.dev/setup | sudo -E bash -s "all"
 ```
+
+### 2. Set up a Minikube Kubernetes cluster
+
+Create a 2-node K8s cluster named mkcluster on Minikube.
+```
+systemctl start docker
+minikube start --nodes 2 -p mkcluster --cpus=1 --force
+minikube profile list  
+minikube profile mkcluster
+minikube kubectl get nodes
+minikube kubectl describe node mkcluster | grep Taints
+minikube kubectl taint nodes mkcluster node-role.kubernetes.io/master:NoSchedule-
+```
+
