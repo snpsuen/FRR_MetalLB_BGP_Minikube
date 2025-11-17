@@ -145,3 +145,6 @@ ubuntu:~/FRR_MetalLB_BGP_Minikube$ clab inspect -t clab_frr_minikube_inst.yaml
 ╰───────────────┴─────────────────────────────────────────────────────────────────────────────────────────────────────────────┴─────────┴───────────────────╯
 ```
 
+### 5. Checkpoint for verification
+
+Before going on to install MetalLB, it is worthwhile to werify the BGP processes are working properly on the FRR switches to build the effect routes from the client to mkcluster.
