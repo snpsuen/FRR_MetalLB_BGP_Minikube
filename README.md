@@ -118,5 +118,30 @@ clab deploy -t clab_frr_minikube_inst.yaml
 
 In the process, ContainerLab creates and configures the FRR spine and leaf switches based on the FRR conf files referenced in the topology template, namely [frrspine.conf](configs/frrspine.conf), [frrleaf1.conf](configs/frrleaf1.conf) and [frrleaf2.conf](configs/frrleaf2.conf).
 
-
+Inspect the deployed nodes of the ContainerLab network topology.
+```
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ clab inspect -t clab_frr_minikube_inst.yaml
+19:34:52 INFO Parsing & checking topology file=clab_frr_minikube_inst.yaml
+╭───────────────┬─────────────────────────────────────────────────────────────────────────────────────────────────────────────┬─────────┬───────────────────╮
+│      Name     │                                                  Kind/Image                                                 │  State  │   IPv4/6 Address  │
+├───────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┼─────────┼───────────────────┤
+│ mkcluster     │ ext-container                                                                                               │ running │ 192.168.49.2      │
+│               │ gcr.io/k8s-minikube/kicbase:v0.0.48@sha256:7171c97a51623558720f8e5878e4f4637da093e2f2ed589997bedc6c1549b2b1 │         │ N/A               │
+├───────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┼─────────┼───────────────────┤
+│ mkcluster-m02 │ ext-container                                                                                               │ running │ 192.168.49.3      │
+│               │ gcr.io/k8s-minikube/kicbase:v0.0.48@sha256:7171c97a51623558720f8e5878e4f4637da093e2f2ed589997bedc6c1549b2b1 │         │ N/A               │
+├───────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┼─────────┼───────────────────┤
+│ client        │ linux                                                                                                       │ running │ 172.20.20.5       │
+│               │ ghcr.io/hellt/network-multitool                                                                             │         │ 3fff:172:20:20::5 │
+├───────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┼─────────┼───────────────────┤
+│ frrleaf1      │ linux                                                                                                       │ running │ 172.20.20.2       │
+│               │ frrouting/frr:latest                                                                                        │         │ 3fff:172:20:20::2 │
+├───────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┼─────────┼───────────────────┤
+│ frrleaf2      │ linux                                                                                                       │ running │ 172.20.20.3       │
+│               │ frrouting/frr:latest                                                                                        │         │ 3fff:172:20:20::3 │
+├───────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┼─────────┼───────────────────┤
+│ frrspine      │ linux                                                                                                       │ running │ 172.20.20.4       │
+│               │ frrouting/frr:latest                                                                                        │         │ 3fff:172:20:20::4 │
+╰───────────────┴─────────────────────────────────────────────────────────────────────────────────────────────────────────────┴─────────┴───────────────────╯
+```
 
