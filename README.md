@@ -118,7 +118,7 @@ clab deploy -t clab_frr_minikube_inst.yaml
 
 In the process, ContainerLab creates and configures the FRR spine and leaf switches based on the FRR conf files referenced in the topology template, namely [frrspine.conf](configs/frrspine.conf), [frrleaf1.conf](configs/frrleaf1.conf) and [frrleaf2.conf](configs/frrleaf2.conf).
 
-Inspect the deployed nodes of the ContainerLab network topology.
+Inspect the deployed containers of the network topology.
 ```
 ubuntu:~/FRR_MetalLB_BGP_Minikube$ clab inspect -t clab_frr_minikube_inst.yaml
 19:34:52 INFO Parsing & checking topology file=clab_frr_minikube_inst.yaml
