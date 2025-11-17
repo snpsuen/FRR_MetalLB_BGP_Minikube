@@ -95,3 +95,11 @@ minikube kubectl describe node mkcluster | grep Taints
 minikube kubectl taint nodes mkcluster node-role.kubernetes.io/master:NoSchedule-
 ```
 
+### 3. Obtain the name of the Minikube docker bridge
+
+Before calling ContainerLab to lay out the target network topology, we need to fetch the name of the docker bridge that was created ealier by Minikube to link up the mkcluster nodes through a layer 2 network. It will be used to declare the bridge as a Containlab node in the topology definition file.
+```
+network_id=$(docker network inspect -f {{.Id}} mkcluster)
+bridge_name="br-${network_id:0:12}"
+```
+```
