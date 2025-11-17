@@ -97,9 +97,26 @@ minikube kubectl taint nodes mkcluster node-role.kubernetes.io/master:NoSchedule
 
 ### 3. Obtain the name of the Minikube docker bridge
 
-Before calling ContainerLab to lay out the target network topology, we need to fetch the name of the docker bridge that was created ealier by Minikube to link up the mkcluster nodes through a layer 2 network. It will be used to declare the bridge as a Containlab node in the topology definition file.
+Before calling ContainerLab to lay out the target network topology, we need to fetch the name of the docker bridge that was created ealier by Minikube to link up the mkcluster nodes through a layer 2 network. It will be used to declare the bridge as a Containlab node in the topology template.
 ```
 network_id=$(docker network inspect -f {{.Id}} mkcluster)
 bridge_name="br-${network_id:0:12}"
 ```
+
+The mkcluster bridge name appears in the form of "br-xxxxxxxxxxxx", where the suffix "x...x" comes from the first 12 characters of the mkcluster network id.
+
+### 4. Deploy the target network topology in ContainerLab
+
+Use the mkcluster bridge name to instantiate the environment variable MK_BRIDGE declared in the ContainerLab topology template, [clab_frr_minikube_template.yaml](clab_frr_minikube_template.yaml).
+
+Invoke clab on the instantiated template to deploy the network topology.
 ```
+export MK_BRIDGE=$bridge_name
+envsubst '$MK_BRIDGE' < clab_frr_minikube_template.yaml > clab_frr_minikube_inst.yaml
+clab deploy -t clab_frr_minikube_inst.yaml
+```
+
+In the process, ContainerLab creates and configures the FRR spine and leaf switches based on the FRR conf files, [frrspine.conf](configs/frrspine.conf), [frrleaf1.conf](configs/frrleaf1.conf) and [frrleaf2.conf](configs/frrleaf2.conf) referenced in the topology template.
+
+
+
