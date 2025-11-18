@@ -287,6 +287,7 @@ B>* 192.168.100.0/24 [20/0] via 10.0.2.1, eth1, weight 1, 00:02:07
 ```
 
 Verify the BGP connectivity by ping from the client to the mkcluster nodes.
+```
 ubuntu:~/FRR_MetalLB_BGP_Minikube docker exec client ping -c 3 192.168.49.2
 PING 192.168.49.2 (192.168.49.2) 56(84) bytes of data.
 64 bytes from 192.168.49.2: icmp_seq=1 ttl=61 time=0.126 ms
