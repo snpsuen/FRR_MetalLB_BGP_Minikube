@@ -128,6 +128,9 @@ Make sure they are found in the correct locaton relative to the toplogy template
 git clone https://github.com/snpsuen/FRR_MetalLB_BGP_Minikube
 cd FRR_MetalLB_BGP_Minikub
 ```
+
+Inspect the containers deployed in the ContainerLab topology.
+```
 ubuntu:~/FRR_MetalLB_BGP_Minikube$ clab inspect -t clab_frr_minikube_inst.yaml
 19:34:52 INFO Parsing & checking topology file=clab_frr_minikube_inst.yaml
 ╭───────────────┬─────────────────────────────────────────────────────────────────────────────────────────────────────────────┬─────────┬───────────────────╮
