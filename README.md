@@ -111,12 +111,15 @@ Use the mkcluster bridge name to instantiate the environment variable MK_BRIDGE 
 
 Invoke clab on the instantiated template to deploy the network topology.
 ```
+git clone https://github.com/snpsuen/FRR_MetalLB_BGP_Minikube
+cd FRR_MetalLB_BGP_Minikube
+
 export MK_BRIDGE=$bridge_name
 envsubst '$MK_BRIDGE' < clab_frr_minikube_template.yaml > clab_frr_minikube_inst.yaml
 clab deploy -t clab_frr_minikube_inst.yaml
 ```
 
-Upon deployment in ContainerLab, the following files are mounted on the FRR switches to configure their network and BGP functions.
+Upon deployment in ContainerLab, the following files are mounted on the FRR switches for configuration of their network and BGP functions.
 * [configs/frrspine.conf](configs/frrspine.conf)
 * [configs/frrleaf1.conf](configs/frrleaf1.conf)
 * [configs/frrleaf2.conf](configs/frrleaf2.conf)
@@ -124,8 +127,6 @@ Upon deployment in ContainerLab, the following files are mounted on the FRR swit
 * [configs/vtysh.conf](configs/vtysh.conf).
 
 Make sure they are found in the correct locaton relative to the toplogy template.
-
-In the process, ContainerLab creates and configures the FRR spine and leaf switches based on the FRR conf files referenced in the topology template, namely [configs/frrspine.conf](configs/frrspine.conf), [configs/frrleaf1.conf](configs/frrleaf1.conf) and [configs/frrleaf2.conf](configs/frrleaf2.conf), which include details of BGP specification. The template also refers to two other FRR related files, [configs/frrdaemons](configs/frrdaemons), [configs/vtysh.conf](configs/vtysh.conf). Make sure these files are found in the relative location, configs/*.
 
 Inspect the deployed containers of the network topology.
 ```
