@@ -111,9 +111,6 @@ Use the mkcluster bridge name to instantiate the environment variable MK_BRIDGE 
 
 Invoke clab on the instantiated template to deploy the network topology.
 ```
-git clone https://github.com/snpsuen/FRR_MetalLB_BGP_Minikube
-cd FRR_MetalLB_BGP_Minikube
-
 export MK_BRIDGE=$bridge_name
 envsubst '$MK_BRIDGE' < clab_frr_minikube_template.yaml > clab_frr_minikube_inst.yaml
 clab deploy -t clab_frr_minikube_inst.yaml
@@ -126,9 +123,10 @@ Upon deployment in ContainerLab, the following files are mounted on the FRR swit
 * [configs/frrdaemons](configs/frrdaemons)
 * [configs/vtysh.conf](configs/vtysh.conf).
 
-Make sure they are found in the correct locaton relative to the toplogy template.
-
-Inspect the deployed containers of the network topology.
+Make sure they are found in the correct locaton relative to the toplogy template. The template is ready to be downloaded together with the subdirectory config/* from this repo. 
+```
+git clone https://github.com/snpsuen/FRR_MetalLB_BGP_Minikube
+cd FRR_MetalLB_BGP_Minikub
 ```
 ubuntu:~/FRR_MetalLB_BGP_Minikube$ clab inspect -t clab_frr_minikube_inst.yaml
 19:34:52 INFO Parsing & checking topology file=clab_frr_minikube_inst.yaml
