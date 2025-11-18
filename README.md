@@ -149,7 +149,7 @@ ubuntu:~/FRR_MetalLB_BGP_Minikube$ clab inspect -t clab_frr_minikube_inst.yaml
 
 Now is the time to verify if the BGP processes are working properly on the FRR fabric to build the effective routes from the client to mkcluster before we go on to install MetalLB. It is observed from the conf files that all the FRR switches are instructed to advertise any native or learnt routes to their external BGP neighbours. 
 
-Inspect the bgp and routing infomration on the FRR spine.
+Inspect the bgp and routing status on the FRR spine.
 ```
 ubuntu:~/FRR_MetalLB_BGP_Minikube$ docker exec frrspine vtysh -c "show bgp summary"
 
@@ -196,7 +196,7 @@ B>* 192.168.49.0/24 [20/0] via 10.0.2.11, eth2, weight 1, 00:01:06
 B>* 192.168.100.0/24 [20/0] via 10.0.1.11, eth1, weight 1, 00:01:06
 ```
 
-Run the same commands on the FRR leaf switches to display the relevant information.
+Run the same vtysh commands on the FRR leaf switches to display the relevant information.
 ```
 ubuntu:~/FRR_MetalLB_BGP_Miniku$ docker exec frrleaf1 vtysh -c "show bgp summary"
 
@@ -239,9 +239,8 @@ C>* 10.0.1.0/24 is directly connected, eth1, 00:02:51
 C>* 172.20.20.0/24 is directly connected, eth0, 00:02:52
 B>* 192.168.49.0/24 [20/0] via 10.0.1.1, eth1, weight 1, 00:01:38
 C>* 192.168.100.0/24 is directly connected, eth2, 00:02:44
-```
 
-```
+
 ubuntu:~/FRR_MetalLB_BGP_Minikube$ docker exec frrleaf2 vtysh -c "show bgp summary"
 
 IPv4 Unicast Summary (VRF default):
