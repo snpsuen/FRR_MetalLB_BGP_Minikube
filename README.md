@@ -116,7 +116,7 @@ envsubst '$MK_BRIDGE' < clab_frr_minikube_template.yaml > clab_frr_minikube_inst
 clab deploy -t clab_frr_minikube_inst.yaml
 ```
 
-In the process, ContainerLab creates and configures the FRR spine and leaf switches based on the FRR conf files referenced in the topology template, namely [frrspine.conf](configs/frrspine.conf), [frrleaf1.conf](configs/frrleaf1.conf) and [frrleaf2.conf](configs/frrleaf2.conf). The file also include details of BGP settings speecified for the FRR switches.
+In the process, ContainerLab creates and configures the FRR spine and leaf switches based on the FRR conf files referenced in the topology template, namely [configs/frrspine.conf](configs/frrspine.conf), [configs/frrleaf1.conf](configs/frrleaf1.conf) and [configs/frrleaf2.conf](configs/frrleaf2.conf), which include details of BGP specification. The template also refers to two other FRR related files, [configs/frrdaemons](configs/frrdaemons), [configs/vtysh.conf](configs/vtysh.conf). Make sure these files are found in the relative location, configs/*.
 
 Inspect the deployed containers of the network topology.
 ```
