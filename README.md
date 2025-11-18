@@ -147,7 +147,7 @@ ubuntu:~/FRR_MetalLB_BGP_Minikube$ clab inspect -t clab_frr_minikube_inst.yaml
 
 ### 5. Checkpoint for verification
 
-Now is the time to verify if the BGP processes are working properly on the FRR fabric to build the effective routes from the client to mkcluster before we go on to install MetalLB. It is observed from the conf files that all the FRR switches are instructed to advertise any native or learnt routes to their external BGP neighbours. 
+Now is the time to verify if the BGP processes are working properly on the FRR fabric to build the effective routes between the client and mkcluster before we go on to install MetalLB. It is observed from the conf files that all the FRR switches are instructed to advertise any native or learnt routes to their external BGP neighbours. 
 
 Inspect the bgp and routing situation on the FRR spine.
 ```
