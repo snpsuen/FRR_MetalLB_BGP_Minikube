@@ -123,7 +123,7 @@ Upon deployment in ContainerLab, the following files are mounted on the FRR swit
 * [configs/frrdaemons](configs/frrdaemons)
 * [configs/vtysh.conf](configs/vtysh.conf).
 
-Make sure they are found in the correct locaton relative to the toplogy template. The template is ready to be downloaded together with the subdirectory config/* from this repo. 
+Make sure they are found in the correct locaton relative to the toplogy template. You may download The template together with those config/* files from this repo. 
 ```
 git clone https://github.com/snpsuen/FRR_MetalLB_BGP_Minikube
 cd FRR_MetalLB_BGP_Minikub
@@ -315,3 +315,43 @@ PING 192.168.49.3 (192.168.49.3) 56(84) bytes of data.
 64 bytes from 192.168.49.3: icmp_seq=2 ttl=61 time=0.148 ms
 64 bytes from 192.168.49.3: icmp_seq=3 ttl=61 time=0.086 ms
 ```
+
+### 6. Set up MetalLB
+
+Install MetalLB on the minikube Kubernetes cluster.
+```
+minikube kubectl -- apply -f https://raw.githubusercontent.com/metallb/metallb/v0.15.2/config/manifests/metallb-native.yaml
+```
+
+Apply the MetalLB crd manifest [metallb_bgp.yaml](metallb_bgp.yaml) to config MetalLB in BGP mode.
+```
+minikube kubectl -- apply -f metallb-bgp.yaml
+```
+
+<table>
+	<thead>
+		<tr>
+			<th scope="col">Property</th>
+			<th scope="col">Settings</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td aligh="left">Advertised IP Pool</td>
+			<td aligh="left">172.24.20.100-172.24.20.110</td>
+		</tr>
+		<tr>
+			<td aligh="left">MetalLB ASN</td>
+			<td aligh="left">65101</td>
+		</tr>
+		<tr>
+			<td aligh="left">Peer ASN</td>
+			<td aligh="left">65002</td>
+		</tr>
+		<tr>
+		    <td aligh="left">External BGP peer</td>
+			<td aligh="left">192.168.49.101</td>
+		</tr>
+	</tbody>
+</table>
+
