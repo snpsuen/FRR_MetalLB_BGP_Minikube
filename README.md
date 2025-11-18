@@ -355,3 +355,18 @@ minikube kubectl -- apply -f metallb-bgp.yaml
 	</tbody>
 </table>
 
+Inspect the MetalLB speakers and their BGP advertisement.
+```
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ minikube kubectl -- -n metallb-system get pods -o wide
+NAME                          READY   STATUS    RESTARTS   AGE   IP             NODE            NOMINATED NODE   READINESS GATES
+controller-6599cd9c46-zdw6q   1/1     Running   0          75s   10.244.1.2     mkcluster-m02   <none>           <none>
+speaker-597p9                 1/1     Running   0          75s   192.168.49.2   mkcluster       <none>           <none>
+speaker-xg8zg                 1/1     Running   0          75s   192.168.49.3   mkcluster-m02   <none>           <none>
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ minikube kubectl -- -n metallb-system get ipaddresspools.metallb.io
+NAME       AUTO ASSIGN   AVOID BUGGY IPS   ADDRESSES
+bgp-pool   true          false             ["172.24.20.100-172.24.20.110"]
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ 
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ minikube kubectl -- -n metallb-system get bgpadvertisements.metallb.io
+NAME         IPADDRESSPOOLS   IPADDRESSPOOL SELECTORS   PEERS
+bgp-advert   ["bgp-pool"] 
+```
