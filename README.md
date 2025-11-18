@@ -394,47 +394,42 @@ nginxhello   LoadBalancer   10.99.81.29   172.24.20.100   80:31226/TCP   67s
 
 ### 8. End to end test out
 
-Run curl to send an HTTP request from the client to the Nginx service at 172.24.20.100 in a whle loop. HTTP responses are observed to come from the three Nginx pods in a load balancing manner.
+Run curl to send an HTTP request from the client to the Nginx service at 172.24.20.100 in a whle loop. HTTP responses are observed to come from the three Nginx pods in a fairly balanced manner.
 ```
-ubuntu:~/srl-k8s-anycast-lab$ while true; do docker exec client curl -s http://172.24.20.100; sleep 3; done
+ubuntu:~/srl-k8s-anycast-lab$ while true
+> do
+> docker exec client curl -s http://172.24.20.100
+> sleep 3
+> done
 Server address: 10.244.0.3:80
 Server name: nginxhello-85f8846c44-b4zvr
-Date: 16/Nov/2025:19:28:05 +0000
+Date: 16/Nov/2025:19:23:32 +0000
 URI: /
-Request ID: 7d1988b8ae521c63a9527f736c0be07c
-Server address: 10.244.1.3:80
-Server name: nginxhello-85f8846c44-gbz4w
-Date: 16/Nov/2025:19:28:08 +0000
-URI: /
-Request ID: a5b070bfc53accdd6ca1840f34cc9eab
-Server address: 10.244.1.3:80
-Server name: nginxhello-85f8846c44-gbz4w
-Date: 16/Nov/2025:19:28:11 +0000
-URI: /
-Request ID: c6af9df1ba7178a63526c0cc3e60665d
-Server address: 10.244.1.3:80
-Server name: nginxhello-85f8846c44-gbz4w
-Date: 16/Nov/2025:19:28:14 +0000
-URI: /
-Request ID: 834a7f46d9f4b2fee5c158bcd87f2a01
+Request ID: 7bb78f4fe11eef42560766f7d6d2d772
 Server address: 10.244.1.4:80
 Server name: nginxhello-85f8846c44-knh4m
-Date: 16/Nov/2025:19:28:17 +0000
+Date: 16/Nov/2025:19:23:35 +0000
 URI: /
-Request ID: 6fe398cf556864d0f6f6461715621088
-Server address: 10.244.1.4:80
-Server name: nginxhello-85f8846c44-knh4m
-Date: 16/Nov/2025:19:28:20 +0000
-URI: /
-Request ID: 5471ffb8c6ed752098c8ebc59563e7ec
-Server address: 10.244.1.3:80
-Server name: nginxhello-85f8846c44-gbz4w
-Date: 16/Nov/2025:19:28:24 +0000
-URI: /
-Request ID: 0284c3aafaeb4caa4542732afc18e0a2
+Request ID: 836b1f17c46fca14fae89248457dffd6
 Server address: 10.244.0.3:80
 Server name: nginxhello-85f8846c44-b4zvr
-Date: 16/Nov/2025:19:28:27 +0000
+Date: 16/Nov/2025:19:23:39 +0000
+URI: /
+Request ID: 5112f56a3239a1415dacac6da1863163
+Server address: 10.244.1.3:80
+Server name: nginxhello-85f8846c44-gbz4w
+Date: 16/Nov/2025:19:23:42 +0000
+URI: /
+Request ID: cde05e58463121ada482b17d85f87433
+Server address: 10.244.0.3:80
+Server name: nginxhello-85f8846c44-b4zvr
+Date: 16/Nov/2025:19:23:45 +0000
+URI: /
+Request ID: 9458fa2ec1f3beb5f26269146a72b146
+Server address: 10.244.1.3:80
+Server name: nginxhello-85f8846c44-gbz4w
+Date: 16/Nov/2025:19:23:48 +0000
+URI: /
 ```
 
 
