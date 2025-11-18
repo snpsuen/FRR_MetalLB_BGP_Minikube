@@ -370,3 +370,72 @@ ubuntu:~/FRR_MetalLB_BGP_Minikube$ minikube kubectl -- -n metallb-system get bgp
 NAME         IPADDRESSPOOLS   IPADDRESSPOOL SELECTORS   PEERS
 bgp-advert   ["bgp-pool"] 
 ```
+
+### 7. Deploy a sampe Nginx service on Kubernetes
+
+Apply the manifest [nginx.yaml](ngix.yaml) to deploy a replica set of 3 Nginx pods to be exposed as a load balancer typed service.
+```
+minikube kubectl -- apply -f nginx.yaml
+```
+
+Observe that the nginx service is duly assigned a VIP from the MetalLB advertisement pool, 172.24.20.100.
+```
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ minikube kubectl -- get pods -o wide
+NAME                          READY   STATUS    RESTARTS   AGE   IP           NODE            NOMINATED NODE   READINESS GATES
+nginxhello-85f8846c44-b4zvr   1/1     Running   0          26s   10.244.0.3   mkcluster       <none>           <none>
+nginxhello-85f8846c44-gbz4w   1/1     Running   0          26s   10.244.1.3   mkcluster-m02   <none>           <none>
+nginxhello-85f8846c44-knh4m   1/1     Running   0          26s   10.244.1.4   mkcluster-m02   <none>           <none>
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ 
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ minikube kubectl -- get svc         
+NAME         TYPE           CLUSTER-IP    EXTERNAL-IP     PORT(S)        AGE
+kubernetes   ClusterIP      10.96.0.1     <none>          443/TCP        11m
+nginxhello   LoadBalancer   10.99.81.29   172.24.20.100   80:31226/TCP   67s
+```
+
+### 8. End to end test out
+
+Run curl to send an HTTP request from the client to the Nginx service at 172.24.20.100 in a whle loop. HTTP responses are observed to come from the three Nginx pods in a load balancing manner.
+```
+ubuntu:~/srl-k8s-anycast-lab$ while true; do docker exec client curl -s http://172.24.20.100; sleep 3; done
+Server address: 10.244.0.3:80
+Server name: nginxhello-85f8846c44-b4zvr
+Date: 16/Nov/2025:19:28:05 +0000
+URI: /
+Request ID: 7d1988b8ae521c63a9527f736c0be07c
+Server address: 10.244.1.3:80
+Server name: nginxhello-85f8846c44-gbz4w
+Date: 16/Nov/2025:19:28:08 +0000
+URI: /
+Request ID: a5b070bfc53accdd6ca1840f34cc9eab
+Server address: 10.244.1.3:80
+Server name: nginxhello-85f8846c44-gbz4w
+Date: 16/Nov/2025:19:28:11 +0000
+URI: /
+Request ID: c6af9df1ba7178a63526c0cc3e60665d
+Server address: 10.244.1.3:80
+Server name: nginxhello-85f8846c44-gbz4w
+Date: 16/Nov/2025:19:28:14 +0000
+URI: /
+Request ID: 834a7f46d9f4b2fee5c158bcd87f2a01
+Server address: 10.244.1.4:80
+Server name: nginxhello-85f8846c44-knh4m
+Date: 16/Nov/2025:19:28:17 +0000
+URI: /
+Request ID: 6fe398cf556864d0f6f6461715621088
+Server address: 10.244.1.4:80
+Server name: nginxhello-85f8846c44-knh4m
+Date: 16/Nov/2025:19:28:20 +0000
+URI: /
+Request ID: 5471ffb8c6ed752098c8ebc59563e7ec
+Server address: 10.244.1.3:80
+Server name: nginxhello-85f8846c44-gbz4w
+Date: 16/Nov/2025:19:28:24 +0000
+URI: /
+Request ID: 0284c3aafaeb4caa4542732afc18e0a2
+Server address: 10.244.0.3:80
+Server name: nginxhello-85f8846c44-b4zvr
+Date: 16/Nov/2025:19:28:27 +0000
+```
+
+
+
