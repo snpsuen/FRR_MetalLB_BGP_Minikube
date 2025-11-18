@@ -355,7 +355,7 @@ minikube kubectl -- apply -f metallb-bgp.yaml
 	</tbody>
 </table>
 
-Inspect the MetalLB speakers and their BGP advertisement.
+Check the MetalLB speakers and their BGP advertisement.
 ```
 ubuntu:~/FRR_MetalLB_BGP_Minikube$ minikube kubectl -- -n metallb-system get pods -o wide
 NAME                          READY   STATUS    RESTARTS   AGE   IP             NODE            NOMINATED NODE   READINESS GATES
