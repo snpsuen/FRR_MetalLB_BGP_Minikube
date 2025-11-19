@@ -394,7 +394,7 @@ nginxhello   LoadBalancer   10.99.81.29   172.24.20.100   80:31226/TCP   67s
 
 ### 8. End to end test out
 
-Run curl to send an HTTP request from the client to the Nginx service at 172.24.20.100 in a whle loop. HTTP responses are observed to come from the three Nginx pods in a fairly balanced manner.
+Run curl to send an HTTP request from the client to the Nginx service at 172.24.20.100 in a whle loop. HTTP responses are observed to come from the three Nginx pods in a fairly even manner.
 ```
 ubuntu:~/srl-k8s-anycast-lab$ while true
 > do
