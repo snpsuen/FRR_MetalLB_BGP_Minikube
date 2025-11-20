@@ -17,7 +17,7 @@ metadata:
 spec:
   ipAddressPools:
     - bgp-pool
-  bgpMultiPath: true
+  ### bgpMultiPath: true
 ---
 apiVersion: metallb.io/v1beta2
 kind: BGPPeer
