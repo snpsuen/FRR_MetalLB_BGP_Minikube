@@ -320,8 +320,9 @@ PING 192.168.49.3 (192.168.49.3) 56(84) bytes of data.
 
 Install MetalLB on the minikube Kubernetes cluster.
 ```
-minikube kubectl -- apply -f https://raw.githubusercontent.com/metallb/metallb/v0.15.2/config/manifests/metallb-native.yaml
+minikube kubectl -- apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.7/config/manifests/metallb-native.yaml
 ```
+Please note that v0.13.7 is a known version of metallb-native that supports advertisements of a service route by multiple MetalLB speakers. As of the latest metallb-native version (v0.15.2), only one of the MetalLB speakers is elected to advertise the service route while the others provides standby support.
 
 Apply the MetalLB crd manifest [metallb_bgp.yaml](metallb-bgp.yaml) to config MetalLB in BGP mode.
 ```
@@ -358,10 +359,10 @@ minikube kubectl -- apply -f metallb-bgp.yaml
 Check the MetalLB speakers and their BGP advertisement.
 ```
 ubuntu:~/FRR_MetalLB_BGP_Minikube$ minikube kubectl -- -n metallb-system get pods -o wide
-NAME                          READY   STATUS    RESTARTS   AGE   IP             NODE            NOMINATED NODE   READINESS GATES
-controller-6599cd9c46-zdw6q   1/1     Running   0          75s   10.244.1.2     mkcluster-m02   <none>           <none>
-speaker-597p9                 1/1     Running   0          75s   192.168.49.2   mkcluster       <none>           <none>
-speaker-xg8zg                 1/1     Running   0          75s   192.168.49.3   mkcluster-m02   <none>           <none>
+NAME                         READY   STATUS    RESTARTS   AGE   IP             NODE            NOMINATED NODE   READINESS GATES
+controller-dd65485bc-ttspq   1/1     Running   0          10m   10.244.2.2     mkcluster-m02   <none>           <none>
+speaker-k4rfv                1/1     Running   0          10m   192.168.49.3   mkcluster-m02   <none>           <none>
+speaker-zp77v                1/1     Running   0          10m   192.168.49.2   mkcluster       <none>           <none>
 ubuntu:~/FRR_MetalLB_BGP_Minikube$ minikube kubectl -- -n metallb-system get ipaddresspools.metallb.io
 NAME       AUTO ASSIGN   AVOID BUGGY IPS   ADDRESSES
 bgp-pool   true          false             ["172.24.20.100-172.24.20.110"]
@@ -381,75 +382,106 @@ minikube kubectl -- apply -f nginx.yaml
 Observe that the nginx service is duly assigned a VIP from the MetalLB advertisement pool, 172.24.20.100.
 ```
 ubuntu:~/FRR_MetalLB_BGP_Minikube$ minikube kubectl -- get pods -o wide
-NAME                          READY   STATUS    RESTARTS   AGE   IP           NODE            NOMINATED NODE   READINESS GATES
-nginxhello-85f8846c44-b4zvr   1/1     Running   0          26s   10.244.0.3   mkcluster       <none>           <none>
-nginxhello-85f8846c44-gbz4w   1/1     Running   0          26s   10.244.1.3   mkcluster-m02   <none>           <none>
-nginxhello-85f8846c44-knh4m   1/1     Running   0          26s   10.244.1.4   mkcluster-m02   <none>           <none>
+NAME                          READY   STATUS    RESTARTS   AGE     IP           NODE            NOMINATED NODE   READINESS GATES
+nginxhello-85f8846c44-2859z   1/1     Running   0          3m26s   10.244.2.3   mkcluster-m02   <none>           <none>
+nginxhello-85f8846c44-5n8v9   1/1     Running   0          3m26s   10.244.0.3   mkcluster       <none>           <none>
+nginxhello-85f8846c44-htzr4   1/1     Running   0          3m26s   10.244.2.4   mkcluster-m02   <none>           <none>
 ubuntu:~/FRR_MetalLB_BGP_Minikube$ 
-ubuntu:~/FRR_MetalLB_BGP_Minikube$ minikube kubectl -- get svc         
-NAME         TYPE           CLUSTER-IP    EXTERNAL-IP     PORT(S)        AGE
-kubernetes   ClusterIP      10.96.0.1     <none>          443/TCP        11m
-nginxhello   LoadBalancer   10.99.81.29   172.24.20.100   80:31226/TCP   67s
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ minikube kubectl -- get svc            
+NAME         TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)        AGE
+kubernetes   ClusterIP      10.96.0.1      <none>          443/TCP        6m49s
+nginxhello   LoadBalancer   10.98.13.160   172.24.20.100   80:31708/TCP   65s
 ```
 
 ### 8. End to end test out
 
 Run curl to send an HTTP request from the client to the Nginx service at 172.24.20.100 in a whle loop. HTTP responses are observed to come from the three Nginx pods in a fairly even manner.
 ```
-ubuntu:~/srl-k8s-anycast-lab$ while true
-> do
-> docker exec client curl -s http://172.24.20.100
-> sleep 3
-> done
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ while true
+do
+docker exec client curl -s http://172.24.20.100
+sleep 3
+done
 Server address: 10.244.0.3:80
-Server name: nginxhello-85f8846c44-b4zvr
-Date: 16/Nov/2025:19:23:32 +0000
+Server name: nginxhello-85f8846c44-5n8v9
+Date: 21/Nov/2025:01:19:44 +0000
 URI: /
-Request ID: 7bb78f4fe11eef42560766f7d6d2d772
-Server address: 10.244.1.4:80
-Server name: nginxhello-85f8846c44-knh4m
-Date: 16/Nov/2025:19:23:35 +0000
+Request ID: e27f444e6765bf08f76e1568bf2336f1
+Server address: 10.244.2.3:80
+Server name: nginxhello-85f8846c44-2859z
+Date: 21/Nov/2025:01:19:47 +0000
 URI: /
-Request ID: 836b1f17c46fca14fae89248457dffd6
+Request ID: e7d0b4e955b1c4e331f99a6b6c3040fe
+Server address: 10.244.2.3:80
+Server name: nginxhello-85f8846c44-2859z
+Date: 21/Nov/2025:01:19:50 +0000
+URI: /
+Request ID: 7fe40c032554f89f37f4e695ac824f07
 Server address: 10.244.0.3:80
-Server name: nginxhello-85f8846c44-b4zvr
-Date: 16/Nov/2025:19:23:39 +0000
+Server name: nginxhello-85f8846c44-5n8v9
+Date: 21/Nov/2025:01:19:54 +0000
 URI: /
-Request ID: 5112f56a3239a1415dacac6da1863163
-Server address: 10.244.1.3:80
-Server name: nginxhello-85f8846c44-gbz4w
-Date: 16/Nov/2025:19:23:42 +0000
-URI: /
-Request ID: cde05e58463121ada482b17d85f87433
+Request ID: e427d478ba7d862404addb5b684f7cc6
 Server address: 10.244.0.3:80
-Server name: nginxhello-85f8846c44-b4zvr
-Date: 16/Nov/2025:19:23:45 +0000
+Server name: nginxhello-85f8846c44-5n8v9
+Date: 21/Nov/2025:01:19:57 +0000
 URI: /
-Request ID: 9458fa2ec1f3beb5f26269146a72b146
-Server address: 10.244.1.3:80
-Server name: nginxhello-85f8846c44-gbz4w
-Date: 16/Nov/2025:19:23:48 +0000
+Request ID: 1ae24f27d9674b8ecdcd6ff92a2c9f98
+Server address: 10.244.0.3:80
+Server name: nginxhello-85f8846c44-5n8v9
+Date: 21/Nov/2025:01:20:00 +0000
 URI: /
+Request ID: 3f59095e76e5e25e7730d03a365b8481
+Server address: 10.244.2.3:80
+Server name: nginxhello-85f8846c44-2859z
+Date: 21/Nov/2025:01:20:03 +0000
+URI: /
+Request ID: e78b0101f8fa31698cba2bb087899cf7
+Server address: 10.244.2.3:80
+Server name: nginxhello-85f8846c44-2859z
+Date: 21/Nov/2025:01:20:06 +0000
+URI: /
+Request ID: 2e4a5925b734c6674fde3ae6d08b130d
+Server address: 10.244.2.3:80
+Server name: nginxhello-85f8846c44-2859z
+Date: 21/Nov/2025:01:20:09 +0000
+URI: /
+Request ID: 7c41ed343adb14c29ac46e32ae27562d
+Server address: 10.244.2.4:80
+Server name: nginxhello-85f8846c44-htzr4
+Date: 21/Nov/2025:01:20:12 +0000
+URI: /
+Request ID: 9c4db277da0665292874f1dda398db32
+^C
+```
+
+Verify that both MetalLB speakers are involved in advertising the VIP route to their external BGP peer.
+```
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ minikube kubectl -- -n metallb-system get pods -o wide
+NAME                         READY   STATUS    RESTARTS   AGE   IP             NODE            NOMINATED NODE   READINESS GATES
+controller-dd65485bc-ttspq   1/1     Running   0          10m   10.244.2.2     mkcluster-m02   <none>           <none>
+speaker-k4rfv                1/1     Running   0          10m   192.168.49.3   mkcluster-m02   <none>           <none>
+speaker-zp77v                1/1     Running   0          10m   192.168.49.2   mkcluster       <none>           <none>
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ 
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ minikube kubectl -- logs -n metallb-system speaker-k4rfv  | grep updatedAdvertisements
+{"caller":"bgp_controller.go:285","event":"updatedAdvertisements","ips":["172.24.20.100"],"level":"info","msg":"making advertisements using BGP","numAds":1,"pool":"bgp-pool","protocol":"bgp","ts":"2025-11-21T01:16:24Z"}
+{"caller":"bgp_controller.go:285","event":"updatedAdvertisements","ips":["172.24.20.100"],"level":"info","msg":"making advertisements using BGP","numAds":1,"pool":"bgp-pool","protocol":"bgp","ts":"2025-11-21T01:16:30Z"}
+{"caller":"bgp_controller.go:285","event":"updatedAdvertisements","ips":["172.24.20.100"],"level":"info","msg":"making advertisements using BGP","numAds":1,"pool":"bgp-pool","protocol":"bgp","ts":"2025-11-21T01:16:30Z"}
+ubuntu:~/FRR_MetalLB_BGP_Minikube$  
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ minikube kubectl -- logs -n metallb-system speaker-zp77v  | grep updatedAdvertisements
+{"caller":"bgp_controller.go:285","event":"updatedAdvertisements","ips":["172.24.20.100"],"level":"info","msg":"making advertisements using BGP","numAds":1,"pool":"bgp-pool","protocol":"bgp","ts":"2025-11-21T01:16:24Z"}
+{"caller":"bgp_controller.go:285","event":"updatedAdvertisements","ips":["172.24.20.100"],"level":"info","msg":"making advertisements using BGP","numAds":1,"pool":"bgp-pool","protocol":"bgp","ts":"2025-11-21T01:16:30Z"}
+{"caller":"bgp_controller.go:285","event":"updatedAdvertisements","ips":["172.24.20.100"],"level":"info","msg":"making advertisements using BGP","numAds":1,"pool":"bgp-pool","protocol":"bgp","ts":"2025-11-21T01:16:30Z"}
 ```
 
 Finally review the latest bgp and routing situation on the FRR switches.
-* show bgp ipv4 unicast 172.24.20.100/32
 * show bgp summary
 * show ip bgp
 * show ip route
+* show bgp ipv4 unicast 172.24.20.100/32
 
 Outout from ffrspine:
 ```
-ubuntu:~/FRR_MetalLB_BGP_Minikube$ docker exec frrspine vtysh -c "show bgp ipv4 unicast 172.24.20.100/32"
-BGP routing table entry for 172.24.20.100/32, version 3
-Paths: (1 available, best #1, table default)
-  Advertised to non peer-group peers:
-  10.0.1.11 10.0.2.11
-  65002 65101
-    10.0.2.11 from 10.0.2.11 (10.0.255.12)
-      Origin IGP, valid, external, best (First path received)
-      Last update: Sun Nov 16 19:19:13 2025
-
 ubuntu:~/FRR_MetalLB_BGP_Minikube$ docker exec frrspine vtysh -c "show bgp summary"
 
 IPv4 Unicast Summary (VRF default):
@@ -459,8 +491,8 @@ RIB entries 5, using 960 bytes of memory
 Peers 2, using 1434 KiB of memory
 
 Neighbor        V         AS   MsgRcvd   MsgSent   TblVer  InQ OutQ  Up/Down State/PfxRcd   PfxSnt Desc
-10.0.1.11       4      65001        22        22        0    0    0 00:13:09            1        3 N/A
-10.0.2.11       4      65002        23        22        0    0    0 00:13:09            2        3 N/A
+10.0.1.11       4      65001        21        21        0    0    0 00:10:15            1        3 N/A
+10.0.2.11       4      65002        20        19        0    0    0 00:10:23            2        3 N/A
 
 Total number of neighbors 2
 ubuntu:~/FRR_MetalLB_BGP_Minikube$ 
@@ -488,27 +520,28 @@ Codes: K - kernel route, C - connected, S - static, R - RIP,
        > - selected route, * - FIB route, q - queued, r - rejected, b - backup
        t - trapped, o - offload failure
 
-K>* 0.0.0.0/0 [0/0] via 172.20.20.1, eth0, 00:13:45
-C>* 10.0.1.0/24 is directly connected, eth1, 00:13:44
-C>* 10.0.2.0/24 is directly connected, eth2, 00:13:44
-C>* 172.20.20.0/24 is directly connected, eth0, 00:13:45
-B>* 172.24.20.100/32 [20/0] via 10.0.2.11, eth2, weight 1, 00:06:30
-B>* 192.168.49.0/24 [20/0] via 10.0.2.11, eth2, weight 1, 00:13:34
-B>* 192.168.100.0/24 [20/0] via 10.0.1.11, eth1, weight 1, 00:13:34
+K>* 0.0.0.0/0 [0/0] via 172.20.20.1, eth0, 00:10:49
+C>* 10.0.1.0/24 is directly connected, eth1, 00:10:42
+C>* 10.0.2.0/24 is directly connected, eth2, 00:10:49
+C>* 172.20.20.0/24 is directly connected, eth0, 00:10:49
+B>* 172.24.20.100/32 [20/0] via 10.0.2.11, eth2, weight 1, 00:06:27
+B>* 192.168.49.0/24 [20/0] via 10.0.2.11, eth2, weight 1, 00:10:43
+B>* 192.168.100.0/24 [20/0] via 10.0.1.11, eth1, weight 1, 00:10:36
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ 
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ 
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ docker exec frrspine vtysh -c "show bgp ipv4 unicast 172.24.20.100/32"
+BGP routing table entry for 172.24.20.100/32, version 3
+Paths: (1 available, best #1, table default)
+  Advertised to non peer-group peers:
+  10.0.1.11 10.0.2.11
+  65002 65101
+    10.0.2.11 from 10.0.2.11 (10.0.255.12)
+      Origin IGP, valid, external, best (First path received)
+      Last update: Fri Nov 21 01:16:24 2025
 ```
 
 Output from frrleaf1
 ```
-ubuntu:~/FRR_MetalLB_BGP_Minikube$ docker exec frrleaf1 vtysh -c "show bgp ipv4 unicast 172.24.20.100/32"
-BGP routing table entry for 172.24.20.100/32, version 3
-Paths: (1 available, best #1, table default)
-  Advertised to non peer-group peers:
-  10.0.1.1
-  64999 65002 65101
-    10.0.1.1 from 10.0.1.1 (10.0.255.1)
-      Origin IGP, valid, external, best (First path received)
-      Last update: Sun Nov 16 19:19:14 2025
-
 ubuntu:~/FRR_MetalLB_BGP_Minikube$ docker exec frrleaf1 vtysh -c "show bgp summary"
 
 IPv4 Unicast Summary (VRF default):
@@ -518,7 +551,7 @@ RIB entries 5, using 960 bytes of memory
 Peers 1, using 717 KiB of memory
 
 Neighbor        V         AS   MsgRcvd   MsgSent   TblVer  InQ OutQ  Up/Down State/PfxRcd   PfxSnt Desc
-10.0.1.1        4      64999        22        22        0    0    0 00:13:45            2        3 N/A
+10.0.1.1        4      64999        19        20        0    0    0 00:09:35            2        3 N/A
 
 Total number of neighbors 1
 ubuntu:~/FRR_MetalLB_BGP_Minikube$ 
@@ -538,6 +571,7 @@ RPKI validation codes: V valid, I invalid, N Not found
 
 Displayed  3 routes and 3 total paths
 ubuntu:~/FRR_MetalLB_BGP_Minikube$ 
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ 
 ubuntu:~/FRR_MetalLB_BGP_Minikube$ docker exec frrleaf1 vtysh -c "show ip route"
 Codes: K - kernel route, C - connected, S - static, R - RIP,
        O - OSPF, I - IS-IS, B - BGP, E - EIGRP, N - NHRP,
@@ -546,43 +580,45 @@ Codes: K - kernel route, C - connected, S - static, R - RIP,
        > - selected route, * - FIB route, q - queued, r - rejected, b - backup
        t - trapped, o - offload failure
 
-K>* 0.0.0.0/0 [0/0] via 172.20.20.1, eth0, 00:15:20
-C>* 10.0.1.0/24 is directly connected, eth1, 00:15:19
-C>* 172.20.20.0/24 is directly connected, eth0, 00:15:20
-B>* 172.24.20.100/32 [20/0] via 10.0.1.1, eth1, weight 1, 00:07:02
-B>* 192.168.49.0/24 [20/0] via 10.0.1.1, eth1, weight 1, 00:14:06
-C>* 192.168.100.0/24 is directly connected, eth2, 00:15:12
+K>* 0.0.0.0/0 [0/0] via 172.20.20.1, eth0, 00:09:56
+C>* 10.0.1.0/24 is directly connected, eth1, 00:09:55
+C>* 172.20.20.0/24 is directly connected, eth0, 00:09:56
+B>* 172.24.20.100/32 [20/0] via 10.0.1.1, eth1, weight 1, 00:05:41
+B>* 192.168.49.0/24 [20/0] via 10.0.1.1, eth1, weight 1, 00:09:50
+C>* 192.168.100.0/24 is directly connected, eth2, 00:09:55
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ 
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ 
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ docker exec frrleaf1 vtysh -c "show bgp ipv4 unicast 172.24.20.100/32"
+BGP routing table entry for 172.24.20.100/32, version 3
+Paths: (1 available, best #1, table default)
+  Advertised to non peer-group peers:
+  10.0.1.1
+  64999 65002 65101
+    10.0.1.1 from 10.0.1.1 (10.0.255.1)
+      Origin IGP, valid, external, best (First path received)
+      Last update: Fri Nov 21 01:16:24 2025
 ```
 
 Output from frrleaf2:
 ```
-ubuntu:~/FRR_MetalLB_BGP_Minikube$ docker exec frrleaf2 vtysh -c "show bgp ipv4 unicast 172.24.20.100/32"
-BGP routing table entry for 172.24.20.100/32, version 3
-Paths: (1 available, best #1, table default)
-  Advertised to non peer-group peers:
-  10.0.2.1 192.168.49.2 192.168.49.3
-  65101
-    192.168.49.3 from 192.168.49.3 (192.168.49.3)
-      Origin IGP, valid, external, best (First path received)
-      Last update: Sun Nov 16 19:19:13 2025
-
 ubuntu:~/FRR_MetalLB_BGP_Minikube$ docker exec frrleaf2 vtysh -c "show bgp summary"
 
 IPv4 Unicast Summary (VRF default):
 BGP router identifier 10.0.255.12, local AS number 65002 vrf-id 0
-BGP table version 3
+BGP table version 4
 RIB entries 5, using 960 bytes of memory
 Peers 3, using 2151 KiB of memory
 
 Neighbor        V         AS   MsgRcvd   MsgSent   TblVer  InQ OutQ  Up/Down State/PfxRcd   PfxSnt Desc
-10.0.2.1        4      64999        23        24        0    0    0 00:14:14            1        3 N/A
-192.168.49.2    4      65101        17        20        0    0    0 00:07:40            0        3 N/A
-192.168.49.3    4      65101        18        20        0    0    0 00:07:40            1        3 N/A
+10.0.2.1        4      64999        17        19        0    0    0 00:08:34            1        3 N/A
+192.168.49.2    4      65101        12        14        0    0    0 00:04:44            1        3 N/A
+192.168.49.3    4      65101        12        14        0    0    0 00:04:44            1        3 N/A
 
 Total number of neighbors 3
 ubuntu:~/FRR_MetalLB_BGP_Minikube$ 
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ 
 ubuntu:~/FRR_MetalLB_BGP_Minikube$ docker exec frrleaf2 vtysh -c "show ip bgp"
-BGP table version is 3, local router ID is 10.0.255.12, vrf id 0
+BGP table version is 4, local router ID is 10.0.255.12, vrf id 0
 Default local pref 100, local AS 65002
 Status codes:  s suppressed, d damped, h history, * valid, > best, = multipath,
                i internal, r RIB-failure, S Stale, R Removed
@@ -591,11 +627,12 @@ Origin codes:  i - IGP, e - EGP, ? - incomplete
 RPKI validation codes: V valid, I invalid, N Not found
 
    Network          Next Hop            Metric LocPrf Weight Path
-*> 172.24.20.100/32 192.168.49.3                           0 65101 i
+*= 172.24.20.100/32 192.168.49.2                           0 65101 i
+*>                  192.168.49.3                           0 65101 i
 *> 192.168.49.0/24  0.0.0.0                  0         32768 i
 *> 192.168.100.0/24 10.0.2.1                               0 64999 65001 i
 
-Displayed  3 routes and 3 total paths
+Displayed  3 routes and 4 total paths
 ubuntu:~/FRR_MetalLB_BGP_Minikube$ 
 ubuntu:~/FRR_MetalLB_BGP_Minikube$ docker exec frrleaf2 vtysh -c "show ip route"
 Codes: K - kernel route, C - connected, S - static, R - RIP,
@@ -605,10 +642,25 @@ Codes: K - kernel route, C - connected, S - static, R - RIP,
        > - selected route, * - FIB route, q - queued, r - rejected, b - backup
        t - trapped, o - offload failure
 
-K>* 0.0.0.0/0 [0/0] via 172.20.20.1, eth0, 00:15:48
-C>* 10.0.2.0/24 is directly connected, eth1, 00:15:48
-C>* 172.20.20.0/24 is directly connected, eth0, 00:15:48
-B>* 172.24.20.100/32 [20/0] via 192.168.49.3, eth2, weight 1, 00:07:31
-C>* 192.168.49.0/24 is directly connected, eth2, 00:15:41
-B>* 192.168.100.0/24 [20/0] via 10.0.2.1, eth1, weight 1, 00:14:35
+K>* 0.0.0.0/0 [0/0] via 172.20.20.1, eth0, 00:09:18
+C>* 10.0.2.0/24 is directly connected, eth1, 00:09:17
+C>* 172.20.20.0/24 is directly connected, eth0, 00:09:18
+B>* 172.24.20.100/32 [20/0] via 192.168.49.2, eth2, weight 1, 00:04:55
+  *                         via 192.168.49.3, eth2, weight 1, 00:04:55
+C>* 192.168.49.0/24 is directly connected, eth2, 00:09:11
+B>* 192.168.100.0/24 [20/0] via 10.0.2.1, eth1, weight 1, 00:09:04
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ 
+ubuntu:~/FRR_MetalLB_BGP_Minikube$ docker exec frrleaf2 vtysh -c "show bgp ipv4 unicast 172.24.20.100/32"
+BGP routing table entry for 172.24.20.100/32, version 4
+Paths: (2 available, best #2, table default)
+  Advertised to non peer-group peers:
+  10.0.2.1 192.168.49.2 192.168.49.3
+  65101
+    192.168.49.2 from 192.168.49.2 (192.168.49.2)
+      Origin IGP, valid, external, multipath
+      Last update: Fri Nov 21 01:16:24 2025
+  65101
+    192.168.49.3 from 192.168.49.3 (192.168.49.3)
+      Origin IGP, valid, external, multipath, best (Older Path)
+      Last update: Fri Nov 21 01:16:24 2025
 ```
