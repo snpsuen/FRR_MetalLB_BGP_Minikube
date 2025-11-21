@@ -322,7 +322,7 @@ Install MetalLB on the minikube Kubernetes cluster.
 ```
 minikube kubectl -- apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.7/config/manifests/metallb-native.yaml
 ```
-Please note that v0.13.7 is a known version of metallb-native that supports advertisements of a service route by multiple MetalLB speakers. As of the latest metallb-native version (v0.15.2), only one of the MetalLB speakers is elected to advertise the service route while the others provides standby support.
+Please note that v0.13.7 is a known version of metallb-native that supports advertisements of a service route by multiple MetalLB speakers. As of the latest metallb-native version (v0.15.2), only one of the MetalLB speakers is elected to advertise the service route while the others are designed to provide standby support.
 
 Apply the MetalLB crd manifest [metallb_bgp.yaml](metallb-bgp.yaml) to config MetalLB in BGP mode.
 ```
