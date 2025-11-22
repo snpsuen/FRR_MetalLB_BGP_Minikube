@@ -75,5 +75,5 @@ topology:
     - endpoints: ["frrspine:eth2", "frrleaf2:eth1"]
     - endpoints: ["frrspine:eth3", "frrleaf3:eth1"]
     - endpoints: ["frrleaf2:eth2", "$MK_BRIDGE01:eth1"]
-    - endpoints: ["frrleaf3:eth2", "$MK_BRIDGE02:eth1"]
+    - endpoints: ["frrleaf3:eth2", "$MK_BRIDGE02:eth2"]
     - endpoints: ["client:eth1", "frrleaf1:eth2"]
