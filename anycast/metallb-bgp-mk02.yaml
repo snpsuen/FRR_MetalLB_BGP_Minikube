@@ -1,0 +1,30 @@
+# metallb-bgp-peers.yaml
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: bgp-pool
+  namespace: metallb-system
+spec:
+  addresses:
+    - 172.24.20.100-172.24.20.110
+---
+apiVersion: metallb.io/v1beta1
+kind: BGPAdvertisement
+metadata:
+  name: bgp-advert
+  namespace: metallb-system
+spec:
+  ipAddressPools:
+    - bgp-pool
+  ### bgpMultiPath: true
+---
+apiVersion: metallb.io/v1beta2
+kind: BGPPeer
+metadata:
+  name: bgp-peer
+  namespace: metallb-system
+spec:
+  myASN: 65102
+  peerASN: 65003
+  peerAddress: 192.168.99.101
