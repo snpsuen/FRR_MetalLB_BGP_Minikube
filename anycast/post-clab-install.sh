@@ -4,12 +4,12 @@ systemctl start docker
 minikube start --driver=docker --nodes 1 -p mkcluster01 --cpus=1 --force
 minikube profile list  
 minikube profile mkcluster01
-minikube kubectl get nodes -o wide
+minikube kubectl -- get nodes -o wide
 
 minikube start --driver=docker --nodes 1 -p mkcluster02 --static-ip 192.168.99.2 --cpus=1 --force
 minikube profile list  
 minikube profile mkcluster02
-minikube kubectl get nodes -o wide
+minikube kubectl -- get nodes -o wide
 
 network_id=$(docker network inspect -f {{.Id}} mkcluster01)
 bridge_name01="br-${network_id:0:12}"
