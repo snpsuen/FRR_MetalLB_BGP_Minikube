@@ -58,8 +58,18 @@ topology:
         - ip addr add 192.168.100.11/24 dev eth1
         - ip route add default via 192.168.100.1
 
+    ### client02 ###
+    client02:
+      kind: linux
+      image: ghcr.io/hellt/network-multitool
+      exec:
+        - ip route delete default via 172.20.20.1
+        - ip addr add 192.168.200.22/24 dev eth1
+        - ip route add default via 192.168.200.1
+
   links:
     - endpoints: ["frrspine:eth1", "frrleaf1:eth1"]
     - endpoints: ["frrspine:eth2", "frrleaf2:eth1"]
     - endpoints: ["frrleaf2:eth2", "$MK_BRIDGE:br"]
     - endpoints: ["client:eth1", "frrleaf1:eth2"]
+    - endpoints: ["client02:eth1", "frrleaf1:eth3"]
