@@ -55,11 +55,13 @@ topology:
       kind: ext-container
       exec:
         - ip route add 192.168.100.0/24 via 192.168.49.101 dev eth0
+        - ip route add 192.168.200.0/24 via 192.168.49.101 dev eth0
 
     mkcluster02:
       kind: ext-container
       exec:
         - ip route add 192.168.100.0/24 via 192.168.99.101 dev eth0
+        - ip route add 192.168.200.0/24 via 192.168.99.101 dev eth0
 
     ### client ###
     client:
@@ -70,6 +72,14 @@ topology:
         - ip addr add 192.168.100.11/24 dev eth1
         - ip route add default via 192.168.100.1
 
+    client02:
+      kind: linux
+      image: ghcr.io/hellt/network-multitool
+      exec:
+        - ip route delete default via 172.20.20.1
+        - ip addr add 192.168.200.22/24 dev eth1
+        - ip route add default via 192.168.200.1
+
   links:
     - endpoints: ["frrspine:eth1", "frrleaf1:eth1"]
     - endpoints: ["frrspine:eth2", "frrleaf2:eth1"]
@@ -77,3 +87,4 @@ topology:
     - endpoints: ["frrleaf2:eth2", "$MK_BRIDGE01:eth1"]
     - endpoints: ["frrleaf3:eth2", "$MK_BRIDGE02:eth2"]
     - endpoints: ["client:eth1", "frrleaf1:eth2"]
+    - endpoints: ["client02:eth1", "frrleaf1:eth3"]
