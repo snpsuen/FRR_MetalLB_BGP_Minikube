@@ -12,4 +12,4 @@ Finally, the kernel of the FRR spine switch will use a suitable hash policy to s
 
 ### Lab inventory
 
-The setup is
+It extends the original makeup by a second minikube K8s cluster, mkcluster02 and a third FRR leaf switch, frrleaf3.
