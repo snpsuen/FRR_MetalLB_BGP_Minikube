@@ -185,3 +185,17 @@ maximum-paths 10
 The first line means that the switch will treat two or more BGP routes whose AS paths are of the same length as equal-cost routes. In our example, the AS path of the BGP route to the anycast VIP on mkcluster01 is "65002 65101", while the BGP route to the anycast VIP on mkcluster02 takes the AS path "65003 65102". The routes are considered equal in cost as both are two ASNs long.
 
 The second line indicates that the switch will install a maximum of 10 equal-cost routes as ECMP routes.
+
+### Install and configure MetalLB on minikube clusters
+
+Set up MetalLB successively on mkcluster01 and mkcluster02.
+```
+minikube profile mkcluster01
+minikube kubectl -- apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.7/config/manifests/metallb-native.yaml
+minikube kubectl -- apply -f metallb-bgp-mk01.yaml
+
+minikube profile mkcluster02
+minikube kubectl -- apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.7/config/manifests/metallb-native.yaml
+minikube kubectl -- apply -f metallb-bgp-mk02.yaml
+```
+
