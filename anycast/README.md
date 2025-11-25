@@ -199,7 +199,7 @@ minikube kubectl -- apply -f https://raw.githubusercontent.com/metallb/metallb/v
 minikube kubectl -- apply -f metallb-bgp-mk02.yaml
 ```
 
-The MetalLB speakers are configured as per the manifests [metallb-bgp-mk01.yaml](metallb-bgp-mk01.yaml) and [metallb-bgp-mk02.yaml](metallb-bgp-mk02.yaml).
+The MetalLB speakers are configured to advertise the same address pool from both cluster. See the manifests [metallb-bgp-mk01.yaml](metallb-bgp-mk01.yaml) and [metallb-bgp-mk02.yaml](metallb-bgp-mk02.yaml) for details.
 
 <table>
 	<thead>
