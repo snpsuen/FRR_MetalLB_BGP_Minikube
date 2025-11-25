@@ -206,9 +206,9 @@ The MetalLB speakers are configured as per the manifests [metallb-bgp-mk01.yaml]
 		<tr>
 			<th scope="col">Minikube</th>
 			<th scope="col">Advertised IP Pool</th>
-			<th scope="col"MetalLB ASN</th>
+			<th scope="col">MetalLB ASN</th>
 			<th scope="col">Peer ASN</th>
-			<th scope="col"?External BGP peer</th>
+			<th scope="col">External BGP peer</th>
 		</tr>
 	</thead>
 	<tbody>
