@@ -228,3 +228,16 @@ The MetalLB speakers are configured to advertise the same address pool from both
 		</tr>
 	</tbody>
 </table>
+
+### Anycast routing to Nginx
+
+Apply [nginx.yaml](nginx.yaml) to deploy a nginx K8s servce on both minikube clusters
+```
+minikube profile mkcluster01
+minikube kubectl -- apply -f nginx.yaml
+
+minikube profile mkcluster02
+minikube kubectl -- apply -f nginx.yaml
+```
+
+
