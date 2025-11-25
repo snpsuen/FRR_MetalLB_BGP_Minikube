@@ -173,5 +173,15 @@ It is specified in the [ContainerLab manifest](clab_bgp_anycast_template.yaml).t
 sysctl -w net.ipv4.fib_multipath_hash_policy=1
 ```
 
-It means the switch will hash the 5-tuple L4 headers of an connection flow to determine which ECMP route to take. Consequently, connection flows that are different in the fields of source port, source IP, destimation port pr destination IP are likely to be assigned different ECMP routes.
+It means the switch will hash the 5-tuple L4 headers of an connection flow to determine which ECMP route to take. Accordingly, connection flows that are different in the fields of source port, source IP, destimation port pr destination IP tend to be assigned different ECMP routes.
 
+Another noteworthy point is about these BGP settings found in the frrspine config file, [frrspine.conf](configs/frrspine.conf).
+```
+bgp bestpath as-path multipath-relax
+...
+maximum-paths 10
+```
+
+THe first line means that the switch will treat two or more BGP routes whose AS paths are of the same length as equal-cost routes. In our example, the AS path of the BGP route to the anycast VIP on mkcluster01 is "65002 65101", while the BGP route to the anycast VIP on mkcluster02 takes the AS path "65003 65102". The routes are considered equal in cost as both are two ASNs long.
+
+The second line indicates that the switch will install a maximum of 10 equal-cost routes as ECMP routes.
