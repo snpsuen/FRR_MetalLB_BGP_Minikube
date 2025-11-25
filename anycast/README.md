@@ -117,3 +117,59 @@ keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$
 ```
 
 ### Deploy ContainerLab topology
+
+You may download the files from this repo folder and deploy the target topology based on the ContainerLab manifest template [clab_bgp_anycast_template.yaml](clab_bgp_anycast_template.yaml).
+
+```
+git clone https://github.com/snpsuen/FRR_MetalLB_BGP_Minikube
+cd FRR_MetalLB_BGP_Minikube/anycast
+
+network_id=$(docker network inspect -f {{.Id}} mkcluster01)
+bridge_name01="br-${network_id:0:12}"
+network_id=$(docker network inspect -f {{.Id}} mkcluster02)
+bridge_name02="br-${network_id:0:12}"
+
+export MK_BRIDGE01=$bridge_name01
+export MK_BRIDGE02=$bridge_name02
+envsubst '$MK_BRIDGE01 $MK_BRIDGE02' < clab_bgp_anycast_template.yaml > clab_bgp_anycast_inst.yaml
+
+clab deploy -t clab_bgp_anycast_inst.yaml
+```
+keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$ sudo clab inspect -t clab_bgp_anycast_inst.yaml                         09:47:03 INFO Parsing & checking topology file=clab_bgp_anycast_inst.yaml
+╭─────────────┬─────────────────────────────────────────────────────────────────────────────────────────────────────────────┬─────────┬───────────────────╮
+│     Name    │                                                  Kind/Image                                                 │  State  │   IPv4/6 Address  │
+├─────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┼─────────┼───────────────────┤
+│ mkcluster01 │ ext-container                                                                                               │ running │ 192.168.49.2      │
+│             │ gcr.io/k8s-minikube/kicbase:v0.0.48@sha256:7171c97a51623558720f8e5878e4f4637da093e2f2ed589997bedc6c1549b2b1 │         │ N/A               │
+├─────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┼─────────┼───────────────────┤
+│ mkcluster02 │ ext-container                                                                                               │ running │ 192.168.99.2      │
+│             │ gcr.io/k8s-minikube/kicbase:v0.0.48@sha256:7171c97a51623558720f8e5878e4f4637da093e2f2ed589997bedc6c1549b2b1 │         │ N/A               │
+├─────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┼─────────┼───────────────────┤
+│ client      │ linux                                                                                                       │ running │ 172.20.20.5       │
+│             │ ghcr.io/hellt/network-multitool                                                                             │         │ 3fff:172:20:20::5 │
+├─────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┼─────────┼───────────────────┤
+│ client02    │ linux                                                                                                       │ running │ 172.20.20.7       │
+│             │ ghcr.io/hellt/network-multitool                                                                             │         │ 3fff:172:20:20::7 │
+├─────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┼─────────┼───────────────────┤
+│ frrleaf1    │ linux                                                                                                       │ running │ 172.20.20.3       │
+│             │ frrouting/frr:latest                                                                                        │         │ 3fff:172:20:20::3 │
+├─────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┼─────────┼───────────────────┤
+│ frrleaf2    │ linux                                                                                                       │ running │ 172.20.20.2       │
+│             │ frrouting/frr:latest                                                                                        │         │ 3fff:172:20:20::2 │
+├─────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┼─────────┼───────────────────┤
+│ frrleaf3    │ linux                                                                                                       │ running │ 172.20.20.4       │
+│             │ frrouting/frr:latest                                                                                        │         │ 3fff:172:20:20::4 │
+├─────────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────┼─────────┼───────────────────┤
+│ frrspine    │ linux                                                                                                       │ running │ 172.20.20.6       │
+│             │ frrouting/frr:latest                                                                                        │         │ 3fff:172:20:20::6 │
+╰─────────────┴─────────────────────────────────────────────────────────────────────────────────────────────────────────────┴─────────┴───────────────────╯
+keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$
+```
+
+It is specified in the [ContainerLab manifest](clab_bgp_anycast_template.yaml).that the following command will be invoked to set the featured kernel paramete when the frrspine node comes up.
+```
+sysctl -w net.ipv4.fib_multipath_hash_policy=1
+```
+
+It means the switch will hash the 5-tuple L4 headers of an connection flow to determine which ECMP route to take. Consequently, connection flows that are different in the fields of source port, source IP, destimation port pr destination IP are likely to be assigned different ECMP routes.
+
