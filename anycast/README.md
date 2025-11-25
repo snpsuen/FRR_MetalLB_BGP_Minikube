@@ -405,7 +405,7 @@ Recall the anycast VIP 172.24.20.100 is advertised by MetalLB to represent the n
 	</tbody>
 </table>
 
-Issue curl -s http://172.24.20.100 from client, 192.168.100.11, in a loop, Observe that the HTTP traffic is spread between the mkcluster01 for nginx pods (10.244.0.16/17) on mkcluster02 for nginx pods (10.244.0.20/21) in a fairly even manner.
+Issue curl -s http://172.24.20.100 from client, 192.168.100.11, in a loop, Observe that the HTTP traffic is distributed between the mkcluster01 for nginx pods (10.244.0.16/17) on mkcluster02 for nginx pods (10.244.0.20/21) in a fairly even manner.
 ```
 keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$ for i in {1..10}; do docker exec client curl -s http://172.24.20.100; sleep 3; done
 Server address: 10.244.0.20:80
