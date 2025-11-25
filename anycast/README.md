@@ -98,7 +98,7 @@ Assume the Minikube and ContainerLab packages have been installed on a suitable 
 
 ### Deploy Minikube K8s clusters
 
-For simplicity and a smaller footprint, both clusters are reduced to a single node each. Moreover, The node of the second cluster, mkcluster02, is to be assigned a bespoke IP, 192.168.99.2.
+For simplicity and a smaller footprint, both clusters are reduced to a single node each. Moreover, the node of the second cluster, mkcluster02, is to be assigned a user-chosen IP, 192.168.99.2.
 
 ```
 minikube start --driver=docker --nodes 1 -p mkcluster01 --cpus=1 --force
