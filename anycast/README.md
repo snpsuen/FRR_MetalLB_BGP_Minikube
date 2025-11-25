@@ -93,3 +93,6 @@ The [baseline lab](../containerlab_frr_mk02.png) is extended to include a second
 		</tr>
 	</tbody>
 </table>
+
+Assume the Minikube and ContainerLab packages have been installed on a suitable Linux platform like Ubuntu 22.04 (jammy). The subsequent steps to be taken to build and test the BGP anycast routes are similar to those performed in the [baseline exercise](../README.md).
+
