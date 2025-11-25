@@ -240,30 +240,30 @@ minikube profile mkcluster02
 minikube kubectl -- apply -f nginx.yaml
 ```
 
-Ckeck that the nginx service use the same VIP 172.24.20.100 to expose the pods running on mkcluster01 and mkcluster02.
+Ckeck that the nginx service uses the same VIP 172.24.20.100 to expose the pods running on mkcluster01 and mkcluster02.
 ```
 keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$ minikube profile mkcluster01
 * minikube profile was successfully set to mkcluster01
-keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$ kubectl get pods -o wide
-NAME                          READY   STATUS    RESTARTS   AGE     IP            NODE          NOMINATED NODE   READINESS GATES
-nginxhello-85f8846c44-q44mb   1/1     Running   0          4h13m   10.244.0.16   mkcluster01   <none>           <none>
-nginxhello-85f8846c44-t6x59   1/1     Running   0          4h13m   10.244.0.17   mkcluster01   <none>           <none>
-keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$
 keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$ kubectl get svc
 NAME         TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)        AGE
 kubernetes   ClusterIP      10.96.0.1      <none>          443/TCP        65m
 nginxhello   LoadBalancer   10.97.167.82   172.24.20.100   80:31963/TCP   25m
 keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$
+keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$ kubectl get pods -o wide
+NAME                          READY   STATUS    RESTARTS   AGE     IP            NODE          NOMINATED NODE   READINESS GATES
+nginxhello-85f8846c44-q44mb   1/1     Running   0          4h13m   10.244.0.16   mkcluster01   <none>           <none>
+nginxhello-85f8846c44-t6x59   1/1     Running   0          4h13m   10.244.0.17   mkcluster01   <none>           <none>
+keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$
 keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$ minikube profile mkcluster02
 * minikube profile was successfully set to mkcluster02
+keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$ kubectl get svc
+NAME         TYPE           CLUSTER-IP       EXTERNAL-IP     PORT(S)        AGE
+kubernetes   ClusterIP      10.96.0.1        <none>          443/TCP        61m
+nginxhello   LoadBalancer   10.106.109.191   172.24.20.100   80:30291/TCP   19m
 keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$
 keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$ kubectl get pods -o wide
 NAME                          READY   STATUS    RESTARTS   AGE     IP            NODE          NOMINATED NODE   READINESS GATES
 nginxhello-85f8846c44-59mq7   1/1     Running   0          3h52m   10.244.0.21   mkcluster02   <none>           <none>
 nginxhello-85f8846c44-7fpzd   1/1     Running   0          3h52m   10.244.0.20   mkcluster02   <none>           <none>
-keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$ kubectl get svc
-NAME         TYPE           CLUSTER-IP       EXTERNAL-IP     PORT(S)        AGE
-kubernetes   ClusterIP      10.96.0.1        <none>          443/TCP        61m
-nginxhello   LoadBalancer   10.106.109.191   172.24.20.100   80:30291/TCP   19m
 ```
 
