@@ -360,7 +360,7 @@ keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$ docker exec frrspine vtysh
 :::::
 ```
 
-Similarly, the output section below is highlighted to indicates both anycast routes are installed as ECMP routes on the Frrspine kernal FIB.
+Similarly, the output section below is highlighted to indicate both anycast routes are installed as ECMP routes on the Frrspine kernal FIB.
 ```
 keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$ docker exec frrspine vtysh -c "show ip route"
 :::::
@@ -369,6 +369,9 @@ B>* 172.24.20.100/32 [20/0] via 10.0.2.11, eth2, weight 1, 01:46:06
 :::::
 ```
 
+### End to end test out
+
+Finally, issue a curl command to the 
 
 
 
