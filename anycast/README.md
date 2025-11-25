@@ -135,6 +135,8 @@ envsubst '$MK_BRIDGE01 $MK_BRIDGE02' < clab_bgp_anycast_template.yaml > clab_bgp
 
 clab deploy -t clab_bgp_anycast_inst.yaml
 ```
+
+```
 keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$ sudo clab inspect -t clab_bgp_anycast_inst.yaml                         09:47:03 INFO Parsing & checking topology file=clab_bgp_anycast_inst.yaml
 ╭─────────────┬─────────────────────────────────────────────────────────────────────────────────────────────────────────────┬─────────┬───────────────────╮
 │     Name    │                                                  Kind/Image                                                 │  State  │   IPv4/6 Address  │
