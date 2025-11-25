@@ -461,7 +461,7 @@ Request ID: 70fcb7eeb5238684c735c202c2e144d5
 keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$
 ```
 
-Similar load balancing findings are observed from client02, 192.168.200.22, issuing curl -s http://172.24.20.100.
+Similar load balancing findings are observed from client02, 192.168.200.22, which received HTTP respones more or less alternately from mkcluster01 and mkcluster02.
 ```
 keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$ for i in {1..10}; do docker exec client02 curl -s http://172.24.20.100; sleep 3; done
 Server address: 10.244.0.21:80
