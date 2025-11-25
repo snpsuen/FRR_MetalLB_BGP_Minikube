@@ -371,7 +371,39 @@ B>* 172.24.20.100/32 [20/0] via 10.0.2.11, eth2, weight 1, 01:46:06
 
 ### End to end test out
 
-Finally, issue a curl command to the 
+Recall the anycast VIP 172.24.20.100 is advertised by MetalLB to represent the nginx pods running on mkcluster01 and mkcluster02 as follows.
+
+<table>
+	<thead>
+		<tr>
+			<th scope="col">Minikube</th>
+			<th scope="col">Pod</th>
+			<th scope="col">Local IP</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td aligh="left">mkcluster01</td>
+			<td aligh="left">nginxhello-85f8846c44-q44mb</td>
+			<td aligh="left">10.244.0.16</td>
+		</tr>
+		<tr>
+			<td aligh="left">mkcluster01</td>
+			<td aligh="left">nginxhello-85f8846c44-t6x59</td>
+			<td aligh="left">10.244.0.17</td>
+		</tr>
+		<tr>
+			<td aligh="left">mkcluster02</td>
+			<td aligh="left">nginxhello-85f8846c44-7fpzd</td>
+			<td aligh="left">10.244.0.20</td>
+		</tr>
+		<tr>
+			<td aligh="left">mkcluster02</td>
+			<td aligh="left">nginxhello-85f8846c44-59mq7</td>
+			<td aligh="left">10.244.0.21</td>
+		</tr>
+	</tbody>
+</table>
 
 
 
