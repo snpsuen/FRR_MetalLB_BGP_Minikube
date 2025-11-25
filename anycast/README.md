@@ -96,3 +96,24 @@ The [baseline lab](../containerlab_frr_mk02.png) is extended to include a second
 
 Assume the Minikube and ContainerLab packages have been installed on a suitable Linux platform like Ubuntu 22.04 (jammy). The subsequent steps to be taken to build and test the BGP anycast routes are similar to those performed in the [baseline exercise](../README.md).
 
+### Deploy Minikube K8s clusters
+
+For simplicity and a smaller footprint, both clusters are reduced to a single node each. Moreover, The node of the second cluster, mkcluster02, is to be assigned a bespoke IP, 192.168.99.2.
+
+```
+minikube start --driver=docker --nodes 1 -p mkcluster01 --cpus=1 --force
+minikube start --driver=docker --nodes 1 -p mkcluster02 --static-ip 192.168.99.2 --cpus=1 --force
+```
+
+```
+keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$ minikube profile list
+┌─────────────┬────────┬─────────┬──────────────┬─────────┬────────┬───────┬────────────────┬────────────────────┐
+│   PROFILE   │ DRIVER │ RUNTIME │      IP      │ VERSION │ STATUS │ NODES │ ACTIVE PROFILE │ ACTIVE KUBECONTEXT │
+├─────────────┼────────┼─────────┼──────────────┼─────────┼────────┼───────┼────────────────┼────────────────────┤
+│ mkcluster01 │ docker │ docker  │ 192.168.49.2 │ v1.34.0 │ OK     │ 1     │                │                    │
+│ mkcluster02 │ docker │ docker  │ 192.168.99.2 │ v1.34.0 │ OK     │ 1     │ *              │ *                  │
+└─────────────┴────────┴─────────┴──────────────┴─────────┴────────┴───────┴────────────────┴────────────────────┘
+keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$
+```
+
+### Deploy ContainerLab topology
