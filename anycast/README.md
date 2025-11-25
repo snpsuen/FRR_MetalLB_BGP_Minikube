@@ -199,3 +199,32 @@ minikube kubectl -- apply -f https://raw.githubusercontent.com/metallb/metallb/v
 minikube kubectl -- apply -f metallb-bgp-mk02.yaml
 ```
 
+The MetalLB speakers are configured as per the manifests [metallb-bgp-mk01.yaml](metallb-bgp-mk01.yaml) and [metallb-bgp-mk02.yaml](metallb-bgp-mk02.yaml).
+
+<table>
+	<thead>
+		<tr>
+			<th scope="col">Minikube</th>
+			<th scope="col">Advertised IP Pool</th>
+			<th scope="col"MetalLB ASN</th>
+			<th scope="col">Peer ASN</th>
+			<th scope="col"?External BGP peer</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td aligh="left">mkcluster01</td>
+			<td aligh="left">172.24.20.100-172.24.20.110</td>
+			<td aligh="left">65101</td>
+			<td aligh="left">65002</td>
+			<td aligh="left">192.168.49.101</td>
+		</tr>
+		<tr>
+			<td aligh="left">mkcluster02</td>
+			<td aligh="left">172.24.20.100-172.24.20.110</td>
+			<td aligh="left">65102</td>
+			<td aligh="left">65003</td>
+			<td aligh="left">192.168.99.101</td>
+		</tr>
+	</tbody>
+</table>
