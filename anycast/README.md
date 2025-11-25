@@ -405,6 +405,117 @@ Recall the anycast VIP 172.24.20.100 is advertised by MetalLB to represent the n
 	</tbody>
 </table>
 
+Issue curl -s http://172.24.20.100 from client, 192.168.100.11, in a loop, Observe that the HTTP traffic is spread between the mkcluster01 for nginx pods (10.244.0.16/17) on mkcluster02 for nginx pods (10.244.0.20/21) in a fairly even manner.
+```
+keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$ for i in {1..10}; do docker exec client curl -s http://172.24.20.100; sleep 3; done
+Server address: 10.244.0.20:80
+Server name: nginxhello-85f8846c44-7fpzd
+Date: 25/Nov/2025:00:07:54 +0000
+URI: /
+Request ID: 5298cefc7f7ef880b3ae8794fec86110
+Server address: 10.244.0.16:80
+Server name: nginxhello-85f8846c44-q44mb
+Date: 25/Nov/2025:00:07:58 +0000
+URI: /
+Request ID: a7999c719c8625b8d2570ab9ca532211
+Server address: 10.244.0.21:80
+Server name: nginxhello-85f8846c44-59mq7
+Date: 25/Nov/2025:00:08:02 +0000
+URI: /
+Request ID: d25024813da78370e016d70dc8fe2776
+Server address: 10.244.0.17:80
+Server name: nginxhello-85f8846c44-t6x59
+Date: 25/Nov/2025:00:08:06 +0000
+URI: /
+Request ID: bdcef07087e5f6ebe02923104b1ec601
+Server address: 10.244.0.17:80
+Server name: nginxhello-85f8846c44-t6x59
+Date: 25/Nov/2025:00:08:10 +0000
+URI: /
+Request ID: c53abe468fc3d0b5899e0fdadb7fe055
+Server address: 10.244.0.21:80
+Server name: nginxhello-85f8846c44-59mq7
+Date: 25/Nov/2025:00:08:14 +0000
+URI: /
+Request ID: 1f686588cb701368b459e0d9bce691c8
+Server address: 10.244.0.21:80
+Server name: nginxhello-85f8846c44-59mq7
+Date: 25/Nov/2025:00:08:18 +0000
+URI: /
+Request ID: d1632ca8d05715850630ff1eb5030b5a
+Server address: 10.244.0.17:80
+Server name: nginxhello-85f8846c44-t6x59
+Date: 25/Nov/2025:00:08:22 +0000
+URI: /
+Request ID: f32567640bc623db1b9b931cd4332afa
+Server address: 10.244.0.17:80
+Server name: nginxhello-85f8846c44-t6x59
+Date: 25/Nov/2025:00:08:26 +0000
+URI: /
+Request ID: d5f3bc96d2c1ba72fe305181cb49efed
+Server address: 10.244.0.21:80
+Server name: nginxhello-85f8846c44-59mq7
+Date: 25/Nov/2025:00:08:30 +0000
+URI: /
+Request ID: 70fcb7eeb5238684c735c202c2e144d5
+keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$
+```
+
+Similar load balancing findings are observed from client02, 192.168.200.22, issuing curl -s http://172.24.20.100.
+```
+keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$ for i in {1..10}; do docker exec client02 curl -s http://172.24.20.100; sleep 3; done
+Server address: 10.244.0.21:80
+Server name: nginxhello-85f8846c44-59mq7
+Date: 25/Nov/2025:00:09:30 +0000
+URI: /
+Request ID: 8c9f3cc0d2cb45ce99f7390ed2ceff58
+Server address: 10.244.0.21:80
+Server name: nginxhello-85f8846c44-59mq7
+Date: 25/Nov/2025:00:09:34 +0000
+URI: /
+Request ID: 9247c577a9c3dbb1e0154cd839ca7df9
+Server address: 10.244.0.17:80
+Server name: nginxhello-85f8846c44-t6x59
+Date: 25/Nov/2025:00:09:38 +0000
+URI: /
+Request ID: 9805410dfef96115b6ace87a0546d08f
+Server address: 10.244.0.20:80
+Server name: nginxhello-85f8846c44-7fpzd
+Date: 25/Nov/2025:00:09:42 +0000
+URI: /
+Request ID: 8101075068ff79b5c7085a2451015a47
+Server address: 10.244.0.17:80
+Server name: nginxhello-85f8846c44-t6x59
+Date: 25/Nov/2025:00:09:46 +0000
+URI: /
+Request ID: 30e33bb1d995e972aca69dd16a77f5be
+Server address: 10.244.0.21:80
+Server name: nginxhello-85f8846c44-59mq7
+Date: 25/Nov/2025:00:09:50 +0000
+URI: /
+Request ID: d9f6364cfc3a679a35bdc17525842757
+Server address: 10.244.0.17:80
+Server name: nginxhello-85f8846c44-t6x59
+Date: 25/Nov/2025:00:09:54 +0000
+URI: /
+Request ID: 3c3060dd8dbbf362082aa78fc1054818
+Server address: 10.244.0.21:80
+Server name: nginxhello-85f8846c44-59mq7
+Date: 25/Nov/2025:00:09:58 +0000
+URI: /
+Request ID: 37d5f0f4386cba4e32977b6bb76f9a9f
+Server address: 10.244.0.17:80
+Server name: nginxhello-85f8846c44-t6x59
+Date: 25/Nov/2025:00:10:02 +0000
+URI: /
+Request ID: fe5ef19903b21933f850b9b16d2503c9
+Server address: 10.244.0.17:80
+Server name: nginxhello-85f8846c44-t6x59
+Date: 25/Nov/2025:00:10:06 +0000
+URI: /
+Request ID: 463ff071e74cc9a50b35a6e92dfb4db7
+keyuser@ubunclone:~/FRR_MetalLB_BGP_Minikube/anycast$
+```
 
 
 
