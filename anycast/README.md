@@ -87,7 +87,7 @@ The [baseline lab](../containerlab_frr_mk02.png) is extended to include a second
 		</tr>
 		<tr>
 		    <td aligh="left">Minikube K8s cluster02 single node</td>
-			<td aligh="left">Host IP: 192.168.99.3/24
+			<td aligh="left">Host IP: 192.168.99.2/24
 			</td>
 			<td aligh="left">Created in advance by Minikube</td>
 		</tr>
