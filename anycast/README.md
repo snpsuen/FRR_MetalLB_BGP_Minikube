@@ -173,7 +173,7 @@ It is specified in the [ContainerLab manifest](clab_bgp_anycast_template.yaml).t
 sysctl -w net.ipv4.fib_multipath_hash_policy=1
 ```
 
-It means the switch will hash the 5-tuple L4 headers of an connection flow to determine which ECMP route to take. Accordingly, connection flows that are different in the fields of source port, source IP, destimation port pr destination IP tend to be assigned different ECMP routes.
+It means the switch will hash the 5-tuple L4 headers of an connection flow to determine which ECMP route to take. Accordingly, connection flows that are different in the fields of source port, source IP, destimation port and destination IP tend to be assigned different ECMP routes.
 
 Another noteworthy point is about these BGP settings found in the frrspine config file, [frrspine.conf](configs/frrspine.conf).
 ```
