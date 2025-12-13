@@ -24,7 +24,7 @@ kind: Service
 metadata:
   name: nginxhello
   labels:
-    advertise: bgp
+    lbmode: bgp
 spec:
   ports:
     - name: http
