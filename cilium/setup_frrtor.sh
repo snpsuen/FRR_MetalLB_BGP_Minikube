@@ -79,5 +79,7 @@ frrouting/frr:latest
 docker exec frrtor sh -c "sysctl -w net.ipv4.ip_forward=1 && sysctl -w net.ipv4.fib_multipath_hash_policy=1"
 docker exec frrtor vtysh -c "show interface"
 docker exec frrtor vtysh -c "show running-config"
+docker exec frrtor vtysh -c "show bgp summary"
+docker exec frrtor vtysh -c "show ip bgp"
 
 
