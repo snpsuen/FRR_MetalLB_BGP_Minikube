@@ -45,6 +45,9 @@ EOF
 docker exec ${kind}-control-plane ip route add 192.168.20.0/24 via $kindgw dev eth0
 docker exec ${kind}-worker ip route add 192.168.20.0/24 via $kindgw dev eth0
 
+docker exec ${kind}-control-plane bash -c "apt-get update && apt-get install iputils-ping"
+docker exec ${kind}-worker bash -c "apt-get update && apt-get install iputils-ping"
+
 kubectl get nodes -o wide
 kubectl taint nodes ${kind}-control-plane node-role.kubernetes.io/control-plane:NoSchedule-
 kubectl describe node ${kind}-worker | grep Taints
