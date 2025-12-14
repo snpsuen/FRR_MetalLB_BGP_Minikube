@@ -74,5 +74,4 @@ cilium install \
   --set l2podAnnouncements.enabled=true \
   --set externalIPs.enabled=true \
   --set autoDirectNodeRoutes=true \
-  
   --set operator.replicas=2
