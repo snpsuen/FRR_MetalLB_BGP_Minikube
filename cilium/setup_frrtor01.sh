@@ -5,8 +5,10 @@ docker network create --subnet=192.168.20.0/24 client
 mkdir configs
 cat > configs/frrtor.conf <<EOF
 interface eth0
+ no ip address 192.168.20.2/24
  ip address 192.168.20.101/24
 interface eth1
+ no ip address 10.20.0.4/16
  ip address 10.20.0.101/16
 !
 router bgp 65001
