@@ -2,10 +2,12 @@
 
 kind=$1
 if [ -z "$kind" ]
+then
   kind="kind01"
 fi
 
 if [ $kind == "kind01" ]
+then
   sudo sysctl fs.inotify.max_user_watches=524288
   sudo sysctl fs.inotify.max_user_instances=512
 
@@ -18,17 +20,18 @@ if [ $kind == "kind01" ]
 fi
 
 if [ $kind == "kind01" ]
+then
   kindsubnet="10.20.0.0/16"
   kindgw="10.20.0.101"
 fi
 
 if [ $kind == "kind02" ]
+then
   kindsubnet="172.20.0.0/16"
   kindgw="172.20.0.101"
 fi
 
 docker network create --subnet=$kindsubnet $kind
-
 export KIND_EXPERIMENTAL_DOCKER_NETWORK=$kind
 kind create cluster --config=- <<EOF
 kind: Cluster
@@ -50,6 +53,7 @@ docker exec ${kind}-control-plane rm -rf /etc/cni/net.d/*
 docker exec ${kind}-worker rm -rf /etc/cni/net.d/*
 
 if [ $kind == "kind01" ]
+then
   CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt)
   CLI_ARCH=amd64
   if [ "$(uname -m)" = "aarch64" ]; then CLI_ARCH=arm64; fi
