@@ -18,7 +18,7 @@ router bgp 65001
   maximum-paths 10
   network 10.20.0.0/16
   network 192.168.20.0/24
-  
+
   neighbor 10.20.0.2 route-map ACCEPT-ALL in
   neighbor 10.20.0.2 route-map ACCEPT-ALL out
   neighbor 10.20.0.3 route-map ACCEPT-ALL in
