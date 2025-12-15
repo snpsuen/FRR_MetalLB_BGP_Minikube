@@ -5,10 +5,8 @@ docker network create --subnet=192.168.20.0/24 client
 mkdir configs
 cat > configs/frrtor.conf <<EOF
 interface eth0
- no ip address 192.168.20.2/24
  ip address 192.168.20.101/24
 interface eth1
- no ip address 10.20.0.4/16
  ip address 10.20.0.101/16
 !
 router bgp 65001
@@ -59,8 +57,8 @@ docker run -d --init --privileged --name frrtor \
 -v ./configs/frrtor.conf:/etc/frr/frr.conf \
 -v ./configs/frrdaemons:/etc/frr/daemons \
 -v ./configs/vtysh.conf:/etc/frr/vtysh.conf \
---network client \
---network kind01 \
+--network client --ip 192.168.20.101 \
+--network kind01 --ip 10.20.0.101 \
 frrouting/frr:latest
 
 docker exec frrtor sh -c "sysctl -w net.ipv4.ip_forward=1 && sysctl -w net.ipv4.fib_multipath_hash_policy=1"
