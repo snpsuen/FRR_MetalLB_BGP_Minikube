@@ -8,8 +8,8 @@ fi
 
 if [ $kind == "kind01" ]
 then
-  sudo sysctl fs.inotify.max_user_watches=524288
-  sudo sysctl fs.inotify.max_user_instances=512
+  sudo sysctl -w fs.inotify.max_user_watches=524288
+  sudo sysctl -w fs.inotify.max_user_instances=512
 
   curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
   sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
