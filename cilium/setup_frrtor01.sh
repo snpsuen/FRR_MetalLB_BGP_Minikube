@@ -11,6 +11,7 @@ interface eth1
 !
 router bgp 65001
  bgp router-id 10.0.255.11
+ bgp bestpath as-path multipath-relax
  neighbor 10.20.0.2 remote-as 65101
  neighbor 10.20.0.3 remote-as 65101
  !
