@@ -6,6 +6,9 @@ kind: CiliumL2AnnouncementPolicy
 metadata:
   name: l2policy01
 spec:
+# serviceSelector:
+#   matchLabels:
+#     color: blue
   nodeSelector:
     matchExpressions:
     - key: node-role.kubernetes.io/control-plane
