@@ -70,6 +70,7 @@ then
 fi
 
 cilium install \
+  --set cni-exclusive=false \
   --set routingMode="native" \
   --set ipv4NativeRoutingCIDR="10.244.0.0/16" \
   --set bgpControlPlane.enabled=true \
