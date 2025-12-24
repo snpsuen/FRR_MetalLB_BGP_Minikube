@@ -71,6 +71,8 @@ fi
 
 cilium install \
   --set cni-exclusive="false" \
+  --set bpf-lb-sock="true" \
+  --set bpf-lb-sock-hostns-only="true" \
   --set routingMode="native" \
   --set ipv4NativeRoutingCIDR="10.244.0.0/16" \
   --set bgpControlPlane.enabled=true \
