@@ -26,6 +26,6 @@ metadata:
   name: "lbpool01"
 spec:
   blocks:
-  - start: "172.18.0.10"
-    stop: "172.18.0.20"
+  - start: "10.20.0.10"
+    stop: "10.20.0.20"
 EOF
