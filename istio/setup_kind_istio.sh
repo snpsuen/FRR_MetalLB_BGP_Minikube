@@ -27,40 +27,9 @@ cd istio*
 export PATH=$PWD/bin:$PATH
 istioctl version
 
-istioctl install --skip-confirmation -f - <<EOF
-apiVersion: install.istio.io/v1alpha1
-kind: IstioOperator
-spec:
-  components:
-    cni:
-      enabled: true
-      k8s:
-        resources:
-          requests:
-            cpu: 0m
-            memory: 0Mi
-    ztunnel:
-      enabled: true
-      k8s:
-        resources:
-          requests:
-            cpu: 0m
-            memory: 0Mi
-    ingressGateways:
-    - name: istio-ingressgateway
-      enabled: false
-    pilot:
-      k8s:
-        env:
-        - name: PILOT_TRACE_SAMPLING
-          value: "100"
-        - name: PILOT_ENABLE_ALPHA_GATEWAY_API
-          value: "true"
-        resources:
-          requests:
-            cpu: 0m
-            memory: 0Mi
-EOF
+istioctl install --set components.pilot.k8s.resources.requests.cpu=0 --set components.pilot.k8s.resources.requests.memory=0 \
+--set components.ztunnel.k8s.resources.requests.cpu=0 --set components.ztunnel.k8s.resources.requests.memory=0 \
+--set values.pilot.env.PILOT_ENABLE_ALPHA_GATEWAY_API=true --set profile=ambient --skip-confirmation
 
 kubectl get crd gateways.gateway.networking.k8s.io &> /dev/null || \
 kubectl apply --server-side -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.0/experimental-install.yaml
