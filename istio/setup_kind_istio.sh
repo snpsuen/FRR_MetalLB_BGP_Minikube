@@ -46,6 +46,9 @@ spec:
           requests:
             cpu: 0m
             memory: 0Mi
+    ingressGateways:
+    - name: istio-ingressgateway
+      enabled: false
     pilot:
       k8s:
         env:
