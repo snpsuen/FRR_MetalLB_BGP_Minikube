@@ -1,11 +1,11 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: car-truck-ingress
+  name: car_truck-ingress
 spec:
   ingressClassName: nginx
   rules:
-  - host: car-truck-ingress
+  - host: car_truck-ingress
     http:
       paths:
       - path: /car
