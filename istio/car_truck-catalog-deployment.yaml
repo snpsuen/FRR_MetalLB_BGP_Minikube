@@ -29,6 +29,7 @@ spec:
   - port: 80
   selector:
     app: car-catalog
+  type: LoadBalancer
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -61,4 +62,5 @@ spec:
   - port: 80
   selector:
     app: truck-catalog
+  type: LoadBalancer
 ---
