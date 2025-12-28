@@ -25,7 +25,7 @@ kubectl get gtw
 kubectl get tcproute
 
 istioctl waypoint apply --enroll-namespace --overwrite --wait
-kubectl -n istio-io-tcp-traffic-shifting apply -f - <<EOF
+kubectl apply -f - <<EOF
 apiVersion: gateway.networking.k8s.io/v1alpha2
 kind: TCPRoute
 metadata:
