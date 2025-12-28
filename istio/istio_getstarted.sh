@@ -15,6 +15,9 @@ kubectl -n istio-system get pods
 kubectl apply -f samples/bookinfo/platform/kube/bookinfo.yaml
 kubectl apply -f samples/bookinfo/platform/kube/bookinfo-versions.yaml
 kubectl apply -f samples/bookinfo/gateway-api/bookinfo-gateway.yaml
+echo "Sleeping for 10 sec ..."
+sleep 10
+
 kubectl get gtw
 kubectl get HTTPRoute
 kubectl get pods -o wide
