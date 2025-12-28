@@ -29,7 +29,7 @@ kubectl apply -f - <<EOF
 apiVersion: gateway.networking.k8s.io/v1alpha2
 kind: TCPRoute
 metadata:
-  name: tcp-echo-ew
+  name: tcp-echo-9010-ew
 spec:
   parentRefs:
   - group: ""
