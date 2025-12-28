@@ -1,7 +1,7 @@
 apiVersion: gateway.networking.k8s.io/v1alpha2
 kind: TCPRoute
 metadata:
-  name: tcp-echo-010-ew
+  name: tcp-echo-0100-ew
 spec:
   parentRefs:
   - group: ""
